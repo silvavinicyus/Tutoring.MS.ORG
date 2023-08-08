@@ -1,0 +1,14 @@
+node_modules
+.webpack
+.env*
+!.env.example
+.docker
+**/coverage
+.vscode
+.serverless
+envs/.staging.json
+envs/.production.json
+envs/.prod.json
+secrets.json
+package-lock.json
+yarn.lock

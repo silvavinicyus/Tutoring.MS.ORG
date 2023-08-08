@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: foo_database
+    ports:
+      - 3306:3306
+  elasticmq:
+    image: softwaremill/elasticmq-native
+    ports:
+      - 9324:9324
+      - 9325:9325

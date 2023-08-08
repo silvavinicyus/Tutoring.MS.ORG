@@ -1,0 +1,64 @@
+service: serverless-template
+
+frameworkVersion: "3"
+
+useDotenv: true
+
+provider:
+  name: aws
+  region: us-east-2
+  runtime: nodejs14.x
+  versionFunctions: false
+  stage: ${opt:stage, "${env:stage, 'dev'}"}
+  memorySize: 256
+  timeout: 15
+  apiGateway:
+    binaryMediaTypes:
+      - "*/*"
+  environment:
+ENVIRONMENT_REPLACE:
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+            - "lambda:*"
+            - "sqs:*"
+            - "sns:*"
+          Resource: "*"
+
+custom:
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+  apigwBinary:
+    types:
+      - "multipart/form-data"
+      - "image/jpeg"
+      - "image/jpeg"
+      - "image/pjpeg"
+      - "image/png"
+      - "image/jpg"
+  functionsDir: src/4-framework/functions
+  serverless-offline:
+    httpPort: 4000
+    lambdaPort: 4001
+  webpack:
+    webpackConfig: "webpack.config.js"
+    packager: "npm"
+    packagerOptions:
+      noFrozenLockfile: true
+    includeModules:
+      forceInclude:
+        - mysql2
+
+plugins:
+  - serverless-disable-functions
+  - serverless-webpack
+  - serverless-offline
+
+functions:
+  - "${file(${self:custom.functionsDir}/foo/foo.yml)}"
