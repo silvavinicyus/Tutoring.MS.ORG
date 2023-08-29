@@ -1,45 +1,45 @@
-import { IOutputCreateFooDto } from '@business/dto/foo/createFooDto'
-import { IAuthorizerInformation } from '@business/dto/role/authorize'
-import { CreateFooUseCase } from '@business/useCases/foo/createFoo'
-import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
-import { InputCreateFoo } from '@controller/serializers/foo/createFoo'
-import { left } from '@shared/either'
 import { inject } from 'inversify'
+import { InputCreateUser } from '@controller/serializers/user/createUser'
+import { IOutputCreateUserDto } from '@business/dto/user/createUserDto'
+import { CreateUserUseCase } from '@business/useCases/user/createUser'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
+import { left } from '@shared/either'
 import { AbstractOperator } from '../abstractOperator'
 
-export class CreateFooOperator extends AbstractOperator<
-  InputCreateFoo,
-  IOutputCreateFooDto
+export class CreateUserOperator extends AbstractOperator<
+  InputCreateUser,
+  IOutputCreateUserDto
 > {
   constructor(
     @inject(CreateTransactionUseCase)
     private createTransaction: CreateTransactionUseCase,
-    @inject(CreateFooUseCase)
-    private createFoo: CreateFooUseCase
+    @inject(CreateUserUseCase)
+    private createUser: CreateUserUseCase
   ) {
     super()
   }
   async run(
-    input: InputCreateFoo,
+    input: InputCreateUser,
     _authorizer: IAuthorizerInformation
-  ): Promise<IOutputCreateFooDto> {
+  ): Promise<IOutputCreateUserDto> {
     this.exec(input)
     const transaction = await this.createTransaction.exec()
     if (transaction.isLeft()) {
       return left(transaction.value)
     }
-    const fooResult = await this.createFoo.exec(
+    const userResult = await this.createUser.exec(
       {
         ...input,
       },
       transaction.value.trx
     )
-    if (fooResult.isLeft()) {
+    if (userResult.isLeft()) {
       await transaction.value.rollback()
-      return left(fooResult.value)
+      return left(userResult.value)
     }
 
     await transaction.value.commit()
-    return fooResult
+    return userResult
   }
 }
