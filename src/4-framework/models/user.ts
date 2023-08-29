@@ -1,10 +1,10 @@
-import { IFooEntity } from '@domain/entities/foo'
 import { DataTypes, Model } from 'sequelize'
+import { IUserEntity } from '@domain/entities/user'
 import { sequelize } from '../utility/database'
 
-export class Foo extends Model<IFooEntity> {}
+export class UserModel extends Model<IUserEntity> {}
 
-Foo.init(
+UserModel.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -16,22 +16,34 @@ Foo.init(
       allowNull: false,
       unique: true,
     },
-    title: {
+    name: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    birthdate: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
     },
     updated_at: {
       type: DataTypes.DATE,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
   {
-    tableName: 'foo',
-    modelName: 'foo',
+    tableName: 'users',
+    modelName: 'users',
     timestamps: false,
     underscored: true,
     sequelize,
