@@ -1,6 +1,6 @@
-import { CreateFooOperator } from '@controller/operations/foo/createFoo'
 import { ContainerModule, interfaces } from 'inversify'
+import { CreateUserOperator } from '@controller/operations/user/createUser'
 
 export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
-  bind(CreateFooOperator).toSelf()
+  bind(CreateUserOperator).toSelf()
 })
