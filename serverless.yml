@@ -1,4 +1,4 @@
-service: serverless-template
+service: Tutoring.MS.ORG
 
 frameworkVersion: "3"
 
@@ -61,4 +61,4 @@ plugins:
   - serverless-offline
 
 functions:
-  - "${file(${self:custom.functionsDir}/foo/foo.yml)}"
+  - "${file(${self:custom.functionsDir}/user/user.yml)}"
