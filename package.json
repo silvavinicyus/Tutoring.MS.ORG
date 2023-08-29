@@ -9,9 +9,10 @@
     "test:watch": "npm t -- --watchAll --verbose",
     "test:cov": "npm t -- --maxWorkers=60% --coverage",
     "test:dev": "npm t -- --watch --runInBand --verbose",
-    "test:staged": "npm t -- --passWithNoTests --findRelatedTests --listTests",    
+    "test:staged": "npm t -- --passWithNoTests --findRelatedTests --listTests",
     "sls": "cross-env NODE_ENV=test npx serverless",
-    "dev": "cross-env NODE_ENV=test npx serverless offline --stage dev"
+    "dev": "cross-env NODE_ENV=test npx serverless offline --stage dev",
+    "sql": "sequelize-cli"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -69,8 +70,8 @@
     "@types/pizzip": "^3.0.2",
     "@types/uuid": "^8.3.1",
     "@types/validator": "^13.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.31.1",
-    "@typescript-eslint/parser": "^4.31.2",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
     "babel-eslint": "^10.1.0",
     "copy-webpack-plugin": "^9.0.1",
     "cross-env": "^7.0.3",
