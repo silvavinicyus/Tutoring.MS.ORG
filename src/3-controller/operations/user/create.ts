@@ -1,6 +1,6 @@
 import { inject } from 'inversify'
-import { InputCreateUser } from '@controller/serializers/user/createUser'
-import { IOutputCreateUserDto } from '@business/dto/user/createUserDto'
+import { InputCreateUser } from '@controller/serializers/user/create'
+import { IOutputCreateUserDto } from '@business/dto/user/create'
 import { CreateUserUseCase } from '@business/useCases/user/createUser'
 import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'

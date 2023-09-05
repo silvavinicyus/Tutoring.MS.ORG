@@ -16,6 +16,8 @@ export type IInputUserEntity = Pick<
   'name' | 'email' | 'birthdate' | 'phone'
 >
 
+export type UserEntityKeys = Pick<IUserEntity, 'name' | 'email' | 'uuid' | 'id'>
+
 export class UserEntity extends AbstractEntity<IUserEntity> {
   static create(
     props: IInputUserEntity,

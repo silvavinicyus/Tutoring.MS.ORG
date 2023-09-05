@@ -1,5 +1,5 @@
 import { IsDate, IsNotEmpty, IsString } from 'class-validator'
-import { IInputCreateUserDto } from '@business/dto/user/createUserDto'
+import { IInputCreateUserDto } from '@business/dto/user/create'
 import { AbstractSerializer } from '../abstractSerializer'
 
 export class InputCreateUser extends AbstractSerializer<IInputCreateUserDto> {

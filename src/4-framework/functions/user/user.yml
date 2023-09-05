@@ -5,3 +5,31 @@ createUser:
         path: /users
         method: post
         cors: true
+findUserBy:
+  handler: ${self:custom.functionsDir}/user/findBy.handler
+  events:
+    - http:
+        path: /users/{uuid}
+        method: get
+        cors: true
+findAllUsers:
+  handler: ${self:custom.functionsDir}/user/findAll.handler
+  events:
+    - http:
+        path: /users
+        method: get
+        cors: true
+updateUser:
+  handler: ${self:custom.functionsDir}/user/update.handler
+  events:
+    - http:
+        path: /users/{uuid}
+        method: put
+        cors: true
+deleteUser:
+  handler: ${self:custom.functionsDir}/user/delete.handler
+  events:
+    - http:
+        path: /users/{uuid}
+        method: delete
+        cors: true

@@ -5,7 +5,7 @@ export class UserErrors extends IError {
     return new UserErrors({
       statusCode: 500,
       body: {
-        code: 'BB-101',
+        code: 'US-101',
         message: 'Error on User`s creation',
         shortMessage: 'UserCreationFailed',
       },
@@ -16,7 +16,7 @@ export class UserErrors extends IError {
     return new UserErrors({
       statusCode: 500,
       body: {
-        code: 'BB-201',
+        code: 'US-102',
         message: 'Error on User`s update',
         shortMessage: 'UserUpdateFailed',
       },
@@ -27,7 +27,7 @@ export class UserErrors extends IError {
     return new UserErrors({
       statusCode: 404,
       body: {
-        code: 'BB-302',
+        code: 'US-103',
         message: 'User not found',
         shortMessage: 'UserNotFound',
       },
@@ -38,7 +38,7 @@ export class UserErrors extends IError {
     return new UserErrors({
       statusCode: 500,
       body: {
-        code: 'BB-501',
+        code: 'US-104',
         message: 'An internal error in connection with User database',
         shortMessage: 'DatabaseConnectionFailed',
       },
@@ -49,9 +49,20 @@ export class UserErrors extends IError {
     return new UserErrors({
       statusCode: 500,
       body: {
-        code: 'BB-301',
+        code: 'US-105',
         message: 'It wasn`t possible to load',
         shortMessage: 'UsersLoadFailed',
+      },
+    })
+  }
+
+  static deleteFailed(): IError {
+    return new UserErrors({
+      statusCode: 500,
+      body: {
+        code: 'US-106',
+        message: 'It wasn`t possible to delete',
+        shortMessage: 'UserDeleteFailed',
       },
     })
   }

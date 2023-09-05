@@ -1,8 +1,7 @@
+import { IInputCreateUserDto } from '@business/dto/user/create'
+import { CreateUserOperator } from '@controller/operations/user/create'
+import { InputCreateUser } from '@controller/serializers/user/create'
 import '@framework/ioc/inversify.config'
-import { CreateUserOperator } from '@controller/operations/user/createUser'
-import { InputCreateUser } from '@controller/serializers/user/createUser'
-import { IInputCreateUserDto } from '@business/dto/user/createUserDto'
-import { LoggerService } from '@framework/services/logger/loggerService'
 import { httpResponse } from '@framework/utility/httpResponse'
 import { middyfy } from '@framework/utility/lambda'
 import { IHandlerInput, IHandlerResult } from '@framework/utility/types'
@@ -27,17 +26,22 @@ const createUser = async (event: IHandlerInput): Promise<IHandlerResult> => {
       input,
       event.requestContext.authorizer
     )
+
+    console.log(userResult.isLeft())
+    console.log(userResult.isRight())
+
     if (userResult.isLeft()) {
       throw userResult.value
     }
 
     return httpResponse('created', userResult.value)
   } catch (err) {
+    console.error(err)
+
     if (err instanceof IError) {
       return httpResponse(err.statusCode, err.body)
     }
-    const logger = new LoggerService()
-    logger.error(err)
+
     return httpResponse(
       'internalError',
       'Internal server error in user creation'
