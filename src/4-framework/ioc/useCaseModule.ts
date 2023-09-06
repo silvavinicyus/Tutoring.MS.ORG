@@ -6,6 +6,10 @@ import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { FindAllUsersUseCase } from '@business/useCases/user/findAllUsers'
 import { UpdateUserUseCase } from '@business/useCases/user/updateUser'
 import { DeleteUserUseCase } from '@business/useCases/user/deleteUser'
+import { CreateStudyGroupUseCase } from '@business/useCases/studyGroup/createStudyGroup'
+import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
+import { FindAllStudyGroupsUseCase } from '@business/useCases/studyGroup/findAllStudyGroups'
+import { DeleteStudyGroupUseCase } from '@business/useCases/studyGroup/deleteStudyGroup'
 
 export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(VerifyProfileUseCase).toSelf()
@@ -17,4 +21,9 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindAllUsersUseCase).toSelf()
   bind(UpdateUserUseCase).toSelf()
   bind(DeleteUserUseCase).toSelf()
+
+  bind(CreateStudyGroupUseCase).toSelf()
+  bind(FindStudyGroupByUseCase).toSelf()
+  bind(FindAllStudyGroupsUseCase).toSelf()
+  bind(DeleteStudyGroupUseCase).toSelf()
 })

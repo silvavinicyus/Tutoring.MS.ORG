@@ -18,6 +18,7 @@ export class FindAllUsersOperator extends AbstractOperator<
   }
 
   async run(input: InputFindAllUsers): Promise<IOutputFindAllUsersDto> {
+    this.exec(input)
     const users = await this.findAllUsers.exec({
       pagination: { count: input.count, page: input.page },
       filters: {

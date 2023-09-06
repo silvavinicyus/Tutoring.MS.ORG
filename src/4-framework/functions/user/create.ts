@@ -1,7 +1,7 @@
+import '@framework/ioc/inversify.config'
 import { IInputCreateUserDto } from '@business/dto/user/create'
 import { CreateUserOperator } from '@controller/operations/user/create'
 import { InputCreateUser } from '@controller/serializers/user/create'
-import '@framework/ioc/inversify.config'
 import { httpResponse } from '@framework/utility/httpResponse'
 import { middyfy } from '@framework/utility/lambda'
 import { IHandlerInput, IHandlerResult } from '@framework/utility/types'

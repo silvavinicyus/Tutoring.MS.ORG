@@ -1,9 +1,5 @@
 export const IS3StorageServiceToken = Symbol.for('IS3StorageServiceToken')
 
-export const IUniqueIdentifierServiceToken = Symbol.for(
-  'IS3StorageServiceToken'
-)
-
 export interface IStorageS3 {
   filename: string
   folder: string

@@ -16,12 +16,17 @@ export interface IStudyGroupEntity
   uuid: string
   name: string
   subject: string
-  creator_id: string
+  creator_id: number
 }
 
 export type IInputStudyGroupEntity = Pick<
   IStudyGroupEntity,
   'name' | 'subject' | 'creator_id'
+>
+
+export type StudyGroupEntityKeys = Pick<
+  IStudyGroupEntity,
+  'name' | 'creator_id' | 'id' | 'uuid'
 >
 
 export class StudyGroupEntity extends AbstractEntity<IStudyGroupEntity> {

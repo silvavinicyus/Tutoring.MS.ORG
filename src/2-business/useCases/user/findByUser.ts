@@ -30,6 +30,10 @@ export class FindByUserUseCase
     try {
       const user = await this.userRepository.findBy(props)
 
+      if (!user) {
+        return left(UserErrors.notFound())
+      }
+
       return right(user)
     } catch (err) {
       this.loggerService.error(err)

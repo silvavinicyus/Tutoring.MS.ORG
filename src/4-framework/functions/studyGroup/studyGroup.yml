@@ -1,0 +1,28 @@
+createStudyGroup:
+  handler: ${self:custom.functionsDir}/studyGroup/create.handler
+  events:
+    - http:
+        path: /studygroup
+        method: post
+        cors: true
+findByStudyGroup:
+  handler: ${self:custom.functionsDir}/studyGroup/findBy.handler
+  events:
+    - http:
+        path: /studygroup/{uuid}
+        method: get
+        cors: true
+findAllStudyGroup:
+  handler: ${self:custom.functionsDir}/studyGroup/findAll.handler
+  events:
+    - http:
+        path: /studygroup
+        method: get
+        cors: true
+deleteStudyGroup:
+  handler: ${self:custom.functionsDir}/studyGroup/delete.handler
+  events:
+    - http:
+        path: /studygroup/{uuid}
+        method: delete
+        cors: true

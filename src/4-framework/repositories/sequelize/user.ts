@@ -19,6 +19,10 @@ export class UserRepository implements IUserRepository {
 
     const user = await UserModel.findOne(options)
 
+    if (!user) {
+      return void 0
+    }
+
     return user.get({ plain: true })
   }
 
