@@ -1,17 +1,15 @@
 import '@framework/ioc/inversify.config'
+import { FindAllPostsOperator } from '@controller/operations/post/findAll'
+import { InputFindAllPosts } from '@controller/serializers/post/findAll'
 import { httpResponse } from '@framework/utility/httpResponse'
 import { middyfy } from '@framework/utility/lambda'
 import { IHandlerInput, IHandlerResult } from '@framework/utility/types'
 import { container } from '@shared/ioc/container'
 import { IOrdenationColumn } from '@shared/utils/order'
 import { IError } from '@shared/IError'
-import { InputFindAllStudyGroups } from '@controller/serializers/studyGroup/findAll'
-import { FindAllStudyGroupsOperator } from '@controller/operations/studyGroup/findAll'
 import { createContainsArray } from '@framework/utility/createContainsArray'
 
-const findAllStudyGroups = async (
-  event: IHandlerInput
-): Promise<IHandlerResult> => {
+const findAllPosts = async (event: IHandlerInput): Promise<IHandlerResult> => {
   try {
     const orders = event.queryStringParameters?.orders
     let getOrdersArrayObject = []
@@ -19,26 +17,30 @@ const findAllStudyGroups = async (
       getOrdersArrayObject = JSON.parse(orders)
     }
 
-    const input = new InputFindAllStudyGroups({
+    const input = new InputFindAllPosts({
       count: +event.queryStringParameters?.count || 10,
       page: +event.queryStringParameters?.page || 0,
       orders: getOrdersArrayObject as unknown as IOrdenationColumn[],
       contains: createContainsArray([
         {
-          column: 'creator_id',
-          value: event.queryStringParameters?.creator_id,
+          column: 'group_id',
+          value: +event.queryStringParameters?.group_id,
+        },
+        {
+          column: 'owner_id',
+          value: +event.queryStringParameters?.owner_id,
         },
       ]),
     })
 
-    const operator = container.get(FindAllStudyGroupsOperator)
-    const studyGroup = await operator.run(input)
+    const operator = container.get(FindAllPostsOperator)
+    const posts = await operator.run(input)
 
-    if (studyGroup.isLeft()) {
-      throw studyGroup.value
+    if (posts.isLeft()) {
+      throw posts.value
     }
 
-    return httpResponse('ok', studyGroup.value)
+    return httpResponse('ok', posts.value)
   } catch (err) {
     console.error(err)
 
@@ -48,9 +50,9 @@ const findAllStudyGroups = async (
 
     return httpResponse(
       'internalError',
-      'internal server error in study groups search'
+      'internal server error in posts search'
     )
   }
 }
 
-export const handler = middyfy(findAllStudyGroups)
+export const handler = middyfy(findAllPosts)

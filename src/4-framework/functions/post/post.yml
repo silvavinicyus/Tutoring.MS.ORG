@@ -1,0 +1,35 @@
+createPost:
+  handler: ${self:custom.functionsDir}/post/create.handler
+  events:
+    - http:
+        path: /posts
+        method: post
+        cors: true
+findPostBy:
+  handler: ${self:custom.functionsDir}/post/findBy.handler
+  events:
+    - http:
+        path: /posts/{uuid}
+        method: get
+        cors: true
+findAllPosts:
+  handler: ${self:custom.functionsDir}/post/findAll.handler
+  events:
+    - http:
+        path: /posts
+        method: get
+        cors: true
+updatePost:
+  handler: ${self:custom.functionsDir}/post/update.handler
+  events:
+    - http:
+        path: /posts/{uuid}
+        method: put
+        cors: true
+deletePost:
+  handler: ${self:custom.functionsDir}/post/delete.handler
+  events:
+    - http:
+        path: /posts/{uuid}
+        method: delete
+        cors: true

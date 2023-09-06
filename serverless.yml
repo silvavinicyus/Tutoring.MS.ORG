@@ -63,3 +63,4 @@ plugins:
 functions:
   - "${file(${self:custom.functionsDir}/user/user.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroup/studyGroup.yml)}"
+  - "${file(${self:custom.functionsDir}/post/post.yml)}"

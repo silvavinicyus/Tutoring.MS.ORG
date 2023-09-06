@@ -14,7 +14,7 @@ export interface IPostEntity extends ITimestamps, Partial<IPostRelations> {
   uuid: string
   title: string
   content: string
-  image_id: number
+  image_id?: number
   group_id: number
   owner_id: number
   fixed: boolean
@@ -23,6 +23,11 @@ export interface IPostEntity extends ITimestamps, Partial<IPostRelations> {
 export type IInputPostEntity = Pick<
   IPostEntity,
   'title' | 'content' | 'image_id' | 'group_id' | 'owner_id' | 'fixed'
+>
+
+export type PostEntityKeys = Pick<
+  IPostEntity,
+  'owner_id' | 'group_id' | 'id' | 'uuid'
 >
 
 export class PostEntity extends AbstractEntity<IPostEntity> {

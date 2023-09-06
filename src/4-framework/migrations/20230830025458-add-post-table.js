@@ -28,7 +28,7 @@ module.exports = {
       },
       image_id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'files',
           key: 'id',
