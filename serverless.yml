@@ -65,3 +65,4 @@ functions:
   - "${file(${self:custom.functionsDir}/studyGroup/studyGroup.yml)}"
   - "${file(${self:custom.functionsDir}/post/post.yml)}"
   - "${file(${self:custom.functionsDir}/postReaction/postReaction.yml)}"
+  - "${file(${self:custom.functionsDir}/studyGroupLeader/studyGroupLeader.yml)}"

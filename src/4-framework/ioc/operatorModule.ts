@@ -16,6 +16,9 @@ import { UpdatePostOperator } from '@controller/operations/post/update'
 import { CreatePostReactionOperator } from '@controller/operations/postReaction/create'
 import { DeletePostReactionOperator } from '@controller/operations/postReaction/delete'
 import { FindAllPostReactionsOperator } from '@controller/operations/postReaction/findAll'
+import { CreateStudyGroupLeaderOperator } from '@controller/operations/studyGroupLeader/create'
+import { DeleteStudyGroupLeaderOperator } from '@controller/operations/studyGroupLeader/delete'
+import { FindAllStudyGroupLeadersOperator } from '@controller/operations/studyGroupLeader/findAll'
 
 export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreateUserOperator).toSelf()
@@ -38,4 +41,8 @@ export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreatePostReactionOperator).toSelf()
   bind(DeletePostReactionOperator).toSelf()
   bind(FindAllPostReactionsOperator).toSelf()
+
+  bind(CreateStudyGroupLeaderOperator).toSelf()
+  bind(DeleteStudyGroupLeaderOperator).toSelf()
+  bind(FindAllStudyGroupLeadersOperator).toSelf()
 })

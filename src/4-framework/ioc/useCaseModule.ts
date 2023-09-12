@@ -19,6 +19,10 @@ import { CreatePostReactionUseCase } from '@business/useCases/postReaction/creat
 import { FindAllPostReactionsUseCase } from '@business/useCases/postReaction/findAllPostReactions'
 import { FindByPostReactionUseCase } from '@business/useCases/postReaction/findByPostReaction'
 import { DeletePostReactionUseCase } from '@business/useCases/postReaction/deletePostReaction'
+import { CreateStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/createStudyGroupLeader'
+import { FindAllStudyGroupLeadersUseCase } from '@business/useCases/studyGroupLeader/findAllStudyGroupLeaders'
+import { FindByStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/findByStudyGroupLeader'
+import { DeleteStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/deleteStudyGroupLeader'
 
 export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(VerifyProfileUseCase).toSelf()
@@ -46,4 +50,9 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindAllPostReactionsUseCase).toSelf()
   bind(FindByPostReactionUseCase).toSelf()
   bind(DeletePostReactionUseCase).toSelf()
+
+  bind(CreateStudyGroupLeaderUseCase).toSelf()
+  bind(FindAllStudyGroupLeadersUseCase).toSelf()
+  bind(FindByStudyGroupLeaderUseCase).toSelf()
+  bind(DeleteStudyGroupLeaderUseCase).toSelf()
 })

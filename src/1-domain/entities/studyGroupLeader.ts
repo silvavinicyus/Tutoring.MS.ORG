@@ -23,6 +23,11 @@ export type IInputStudyGroupLeaderEntity = Pick<
   'group_id' | 'leader_id'
 >
 
+export type StudyGroupLeaderEntityKeys = Pick<
+  IStudyGroupLeaderEntity,
+  'group_id' | 'leader_id' | 'id' | 'uuid'
+>
+
 export class StudyGroupLeaderEntity extends AbstractEntity<IStudyGroupLeaderEntity> {
   static create(
     props: IInputStudyGroupLeaderEntity,

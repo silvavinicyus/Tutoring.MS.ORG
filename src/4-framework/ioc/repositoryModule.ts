@@ -24,6 +24,11 @@ import {
   IPostReactionRepositoryToken,
 } from '@business/repositories/postReaction/iPostReactionRepository'
 import { PostReactionRepository } from '@framework/repositories/sequelize/postReaction'
+import {
+  IStudyGroupLeaderRepository,
+  IStudyGroupLeaderRepositoryToken,
+} from '@business/repositories/studyGroupLeader/iStudyGroupLeaderRepository'
+import { StudyGroupLeaderRepository } from '@framework/repositories/sequelize/studyGroupLeader'
 
 export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUserRepository>(IUserRepositoryToken).to(UserRepository)
@@ -40,5 +45,9 @@ export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
 
   bind<IPostReactionRepository>(IPostReactionRepositoryToken).to(
     PostReactionRepository
+  )
+
+  bind<IStudyGroupLeaderRepository>(IStudyGroupLeaderRepositoryToken).to(
+    StudyGroupLeaderRepository
   )
 })
