@@ -23,6 +23,10 @@ import { CreateStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLead
 import { FindAllStudyGroupLeadersUseCase } from '@business/useCases/studyGroupLeader/findAllStudyGroupLeaders'
 import { FindByStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/findByStudyGroupLeader'
 import { DeleteStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/deleteStudyGroupLeader'
+import { CreateStudyGroupStudentUseCase } from '@business/useCases/studyGroupStudent/createStudyGroupStudent'
+import { FindAllStudyGroupStudentsUseCase } from '@business/useCases/studyGroupStudent/findAllStudyGroupStudent'
+import { FindByStudyGroupStudentUseCase } from '@business/useCases/studyGroupStudent/findByStudyGroupStudent'
+import { DeleteStudyGroupStudentUseCase } from '@business/useCases/studyGroupStudent/deleteStudyGroupStudent'
 
 export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(VerifyProfileUseCase).toSelf()
@@ -55,4 +59,9 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindAllStudyGroupLeadersUseCase).toSelf()
   bind(FindByStudyGroupLeaderUseCase).toSelf()
   bind(DeleteStudyGroupLeaderUseCase).toSelf()
+
+  bind(CreateStudyGroupStudentUseCase).toSelf()
+  bind(FindAllStudyGroupStudentsUseCase).toSelf()
+  bind(FindByStudyGroupStudentUseCase).toSelf()
+  bind(DeleteStudyGroupStudentUseCase).toSelf()
 })

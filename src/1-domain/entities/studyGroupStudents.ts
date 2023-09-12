@@ -23,6 +23,11 @@ export type IInputStudyGroupStudentEntity = Pick<
   'group_id' | 'student_id'
 >
 
+export type StudyGroupStudentEntityKeys = Pick<
+  IStudyGroupStudentsEntity,
+  'group_id' | 'student_id' | 'id' | 'uuid'
+>
+
 export class StudyGroupStudentEntity extends AbstractEntity<IStudyGroupStudentsEntity> {
   static create(
     props: IInputStudyGroupStudentEntity,

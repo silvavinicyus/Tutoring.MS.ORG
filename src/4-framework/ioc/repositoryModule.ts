@@ -29,6 +29,11 @@ import {
   IStudyGroupLeaderRepositoryToken,
 } from '@business/repositories/studyGroupLeader/iStudyGroupLeaderRepository'
 import { StudyGroupLeaderRepository } from '@framework/repositories/sequelize/studyGroupLeader'
+import {
+  IStudyGroupStudentRepository,
+  IStudyGroupStudentRepositoryToken,
+} from '@business/repositories/studyGroupStudent/iStudyGroupStudentRepository'
+import { StudyGroupStudentRepository } from '@framework/repositories/sequelize/studyGroupStudent'
 
 export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUserRepository>(IUserRepositoryToken).to(UserRepository)
@@ -49,5 +54,9 @@ export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
 
   bind<IStudyGroupLeaderRepository>(IStudyGroupLeaderRepositoryToken).to(
     StudyGroupLeaderRepository
+  )
+
+  bind<IStudyGroupStudentRepository>(IStudyGroupStudentRepositoryToken).to(
+    StudyGroupStudentRepository
   )
 })
