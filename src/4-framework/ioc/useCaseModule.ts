@@ -15,6 +15,10 @@ import { FindByPostUseCase } from '@business/useCases/post/findByPost'
 import { FindAllPostsUseCase } from '@business/useCases/post/findAllPosts'
 import { DeletePostUseCase } from '@business/useCases/post/deletePost'
 import { UpdatePostUseCase } from '@business/useCases/post/updatePost'
+import { CreatePostReactionUseCase } from '@business/useCases/postReaction/createPostReaction'
+import { FindAllPostReactionsUseCase } from '@business/useCases/postReaction/findAllPostReactions'
+import { FindByPostReactionUseCase } from '@business/useCases/postReaction/findByPostReaction'
+import { DeletePostReactionUseCase } from '@business/useCases/postReaction/deletePostReaction'
 
 export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(VerifyProfileUseCase).toSelf()
@@ -37,4 +41,9 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindAllPostsUseCase).toSelf()
   bind(DeletePostUseCase).toSelf()
   bind(UpdatePostUseCase).toSelf()
+
+  bind(CreatePostReactionUseCase).toSelf()
+  bind(FindAllPostReactionsUseCase).toSelf()
+  bind(FindByPostReactionUseCase).toSelf()
+  bind(DeletePostReactionUseCase).toSelf()
 })

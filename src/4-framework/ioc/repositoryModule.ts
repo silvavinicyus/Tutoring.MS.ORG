@@ -19,6 +19,11 @@ import {
   IPostRepositoryToken,
 } from '@business/repositories/post/iPostRepository'
 import { PostRepository } from '@framework/repositories/sequelize/post'
+import {
+  IPostReactionRepository,
+  IPostReactionRepositoryToken,
+} from '@business/repositories/postReaction/iPostReactionRepository'
+import { PostReactionRepository } from '@framework/repositories/sequelize/postReaction'
 
 export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUserRepository>(IUserRepositoryToken).to(UserRepository)
@@ -32,4 +37,8 @@ export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
   )
 
   bind<IPostRepository>(IPostRepositoryToken).to(PostRepository)
+
+  bind<IPostReactionRepository>(IPostReactionRepositoryToken).to(
+    PostReactionRepository
+  )
 })

@@ -39,11 +39,11 @@ export class PostRepository implements IPostRepository {
   ): Promise<IPaginatedResponse<IPostEntity>> {
     const options = createFindAllOptions(input)
 
-    const users = await PostModel.findAll(options)
+    const posts = await PostModel.findAll(options)
 
     return {
-      items: users.map((post) => post.get({ plain: true })),
-      count: users.length,
+      items: posts.map((post) => post.get({ plain: true })),
+      count: posts.length,
       page: input.pagination.page || 0,
       perPage: input.pagination.count || 10,
     }

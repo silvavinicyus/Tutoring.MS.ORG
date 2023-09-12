@@ -13,6 +13,9 @@ import { FindPostByOperator } from '@controller/operations/post/findBy'
 import { FindAllPostsOperator } from '@controller/operations/post/findAll'
 import { DeletePostOperator } from '@controller/operations/post/delete'
 import { UpdatePostOperator } from '@controller/operations/post/update'
+import { CreatePostReactionOperator } from '@controller/operations/postReaction/create'
+import { DeletePostReactionOperator } from '@controller/operations/postReaction/delete'
+import { FindAllPostReactionsOperator } from '@controller/operations/postReaction/findAll'
 
 export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreateUserOperator).toSelf()
@@ -31,4 +34,8 @@ export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindAllPostsOperator).toSelf()
   bind(DeletePostOperator).toSelf()
   bind(UpdatePostOperator).toSelf()
+
+  bind(CreatePostReactionOperator).toSelf()
+  bind(DeletePostReactionOperator).toSelf()
+  bind(FindAllPostReactionsOperator).toSelf()
 })

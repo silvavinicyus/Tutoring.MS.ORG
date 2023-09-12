@@ -21,6 +21,11 @@ export type IInputPostReactionEntity = Pick<
   'type' | 'post_id' | 'user_id'
 >
 
+export type PostReactionEntityKeys = Pick<
+  IPostReactionEntity,
+  'id' | 'uuid' | 'post_id' | 'type'
+>
+
 export interface IPostReactionEntity
   extends ITimestamps,
     Partial<IPostReactionRelations> {

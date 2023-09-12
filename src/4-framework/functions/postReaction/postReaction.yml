@@ -1,0 +1,21 @@
+createPostReaction:
+  handler: ${self:custom.functionsDir}/postReaction/create.handler
+  events:
+    - http:
+        path: /posts/{uuid}/reactions
+        method: post
+        cors: true
+findAllPostReactions:
+  handler: ${self:custom.functionsDir}/postReaction/findAll.handler
+  events:
+    - http:
+        path: /posts/{uuid}/reactions
+        method: get
+        cors: true
+deletePostReaction:
+  handler: ${self:custom.functionsDir}/postReaction/delete.handler
+  events:
+    - http:
+        path: /posts/reactions/{uuid}
+        method: delete
+        cors: true
