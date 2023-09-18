@@ -19,3 +19,17 @@ deleteStudyGroupStudent:
         path: /studygroup/students/{uuid}
         method: delete
         cors: true
+requestToJoinStudyGroup:
+  handler: ${self:custom.functionsDir}/studyGroupStudent/requestToJoin.handler
+  events:
+    - http:
+        path: /studygroup/{group_uuid}/request
+        method: post
+        cors: true
+answerRequestToJoinStudyGroup:
+  handler: ${self:custom.functionsDir}/studyGroupStudent/answerRequestToJoin.handler
+  events:
+    - http:
+        path: /studygroup/request/{group_request_uuid}
+        method: post
+        cors: true

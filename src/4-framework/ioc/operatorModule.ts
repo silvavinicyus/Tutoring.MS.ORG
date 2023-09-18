@@ -22,6 +22,8 @@ import { FindAllStudyGroupLeadersOperator } from '@controller/operations/studyGr
 import { CreateStudyGroupStudentOperator } from '@controller/operations/studyGroupStudent/create'
 import { DeleteStudyGroupStudentOperator } from '@controller/operations/studyGroupStudent/delete'
 import { FindAllStudyGroupStudentsOperator } from '@controller/operations/studyGroupStudent/findAll'
+import { RequestToJoinStudyGroupOperator } from '@controller/operations/studyGroupStudent/requestToJoin'
+import { AnswerRequestToJoinStudyGroupOperator } from '@controller/operations/studyGroupStudent/answerRequestToJoin'
 
 export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreateUserOperator).toSelf()
@@ -52,4 +54,6 @@ export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreateStudyGroupStudentOperator).toSelf()
   bind(DeleteStudyGroupStudentOperator).toSelf()
   bind(FindAllStudyGroupStudentsOperator).toSelf()
+  bind(RequestToJoinStudyGroupOperator).toSelf()
+  bind(AnswerRequestToJoinStudyGroupOperator).toSelf()
 })
