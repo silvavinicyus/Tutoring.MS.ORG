@@ -16,7 +16,7 @@ provider:
     binaryMediaTypes:
       - "*/*"
   environment:
-ENVIRONMENT_REPLACE:
+    AUTHORIZER_MS_AUTH: ${env:AUTHORIZER_MS_AUTH}
 
   iam:
     role:
@@ -30,6 +30,12 @@ ENVIRONMENT_REPLACE:
           Resource: "*"
 
 custom:
+  baseAuthorizer:
+    arn: ${self:provider.environment.AUTHORIZER_MS_AUTH}
+    resultTtlInSeconds: 0
+  localAuthorizer:
+    name: authorization
+    type: token
   prune:
     automatic: true
     includeLayers: true
@@ -44,8 +50,8 @@ custom:
       - "image/jpg"
   functionsDir: src/4-framework/functions
   serverless-offline:
-    httpPort: 4000
-    lambdaPort: 4001
+    httpPort: 4100
+    lambdaPort: 4101
   webpack:
     webpackConfig: "webpack.config.js"
     packager: "npm"
@@ -57,9 +63,9 @@ custom:
 
 plugins:
   - serverless-disable-functions
-  - serverless-webpack
+  - '@jhonpedro/serverless-offline-local-authorizers-plugin'  
   - serverless-offline
-
+  - serverless-webpack
 functions:
   - "${file(${self:custom.functionsDir}/user/user.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroup/studyGroup.yml)}"

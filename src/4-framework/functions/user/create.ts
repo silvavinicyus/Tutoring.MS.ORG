@@ -27,9 +27,6 @@ const createUser = async (event: IHandlerInput): Promise<IHandlerResult> => {
       event.requestContext.authorizer
     )
 
-    console.log(userResult.isLeft())
-    console.log(userResult.isRight())
-
     if (userResult.isLeft()) {
       throw userResult.value
     }

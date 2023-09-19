@@ -11,7 +11,7 @@
     "test:dev": "npm t -- --watch --runInBand --verbose",
     "test:staged": "npm t -- --passWithNoTests --findRelatedTests --listTests",
     "sls": "cross-env NODE_ENV=test npx serverless",
-    "dev": "cross-env NODE_ENV=test npx serverless offline --stage dev",
+    "dev": "cross-env NODE_ENV=test npx serverless offline local-authorizers --stage dev",
     "sql": "sequelize-cli"
   },
   "engines": {
@@ -29,7 +29,7 @@
     "@sentry/node": "^7.2.0",
     "@sentry/serverless": "^7.2.0",
     "@types/aws-lambda": "^8.10.97",
-    "aws-sdk": "^2.1135.0",
+    "aws-sdk": "^2.1018.0",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
@@ -58,6 +58,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@jhonpedro/serverless-offline-local-authorizers-plugin": "^1.0.0",
     "@serverless/typescript": "^2.23.0",
     "@types/bcrypt": "^5.0.0",
     "@types/bcryptjs": "^2.4.2",
@@ -90,6 +91,7 @@
     "serverless": "^3.1.1",
     "serverless-disable-functions": "^1.0.0",
     "serverless-offline": "^8.2.0",
+    "serverless-offline-sns": "^0.76.0",
     "serverless-offline-sqs": "^6.0.0",
     "serverless-prune-plugin": "^2.0.1",
     "serverless-webpack": "^5.3.5",
