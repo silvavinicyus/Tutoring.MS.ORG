@@ -5,6 +5,9 @@ createUser:
         path: /users
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findUserBy:
   handler: ${self:custom.functionsDir}/user/findBy.handler
   events:
@@ -12,6 +15,9 @@ findUserBy:
         path: /users/{uuid}
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findAllUsers:
   handler: ${self:custom.functionsDir}/user/findAll.handler
   events:
@@ -19,6 +25,9 @@ findAllUsers:
         path: /users
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 updateUser:
   handler: ${self:custom.functionsDir}/user/update.handler
   events:
@@ -26,6 +35,9 @@ updateUser:
         path: /users/{uuid}
         method: put
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 deleteUser:
   handler: ${self:custom.functionsDir}/user/delete.handler
   events:
@@ -33,3 +45,6 @@ deleteUser:
         path: /users/{uuid}
         method: delete
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
