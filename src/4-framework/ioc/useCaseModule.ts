@@ -30,6 +30,7 @@ import { DeleteStudyGroupStudentUseCase } from '@business/useCases/studyGroupStu
 import { CreateStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/createStudyGroupRequest'
 import { DeleteStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/deleteStudyGroupRequest'
 import { FindByStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/findbyStudyGroupRequest'
+import { CreateUserNotification } from '@business/useCases/notification/createUserNotification'
 
 export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(VerifyProfileUseCase).toSelf()
@@ -71,4 +72,6 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreateStudyGroupRequestUseCase).toSelf()
   bind(DeleteStudyGroupRequestUseCase).toSelf()
   bind(FindByStudyGroupRequestUseCase).toSelf()
+
+  bind(CreateUserNotification).toSelf()
 })

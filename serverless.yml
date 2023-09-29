@@ -17,17 +17,19 @@ provider:
       - "*/*"
   environment:
     AUTHORIZER_MS_AUTH: ${env:AUTHORIZER_MS_AUTH}
+    SNS_CREATE_USER: ${env:SNS_CREATE_USER}
 
   iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: 'Allow'
           Action:
-            - "s3:*"
-            - "lambda:*"
-            - "sqs:*"
-            - "sns:*"
-          Resource: "*"
+            - 's3:*'
+            - 'lambda:*'
+            - 'sqs:*'
+            - 'sns:*'
+            - 'execute-api:*'
+          Resource: '*'
 
 custom:
   baseAuthorizer:
@@ -52,6 +54,11 @@ custom:
   serverless-offline:
     httpPort: 4100
     lambdaPort: 4101
+  serverless-offline-sns:
+    port: 4099
+    debug: true
+  enable-functions:
+    dev: true
   webpack:
     webpackConfig: "webpack.config.js"
     packager: "npm"
@@ -63,13 +70,23 @@ custom:
 
 plugins:
   - serverless-disable-functions
-  - '@jhonpedro/serverless-offline-local-authorizers-plugin'  
+  - '@jhonpedro/serverless-offline-local-authorizers-plugin'
+  - serverless-offline-sns
   - serverless-offline
   - serverless-webpack
+  
 functions:
+  - "${file(${self:custom.functionsDir}/@helpers/helpers.yml)}"
   - "${file(${self:custom.functionsDir}/user/user.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroup/studyGroup.yml)}"
   - "${file(${self:custom.functionsDir}/post/post.yml)}"
   - "${file(${self:custom.functionsDir}/postReaction/postReaction.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroupLeader/studyGroupLeader.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroupStudent/studyGroupStudent.yml)}"
+
+resources:
+  Resources:     
+    CreateUserSNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: tutoring-org-${self:provider.stage}-create-user

@@ -1,7 +1,9 @@
 import '@framework/ioc/inversify.config'
-import { IInputCreateUserDto } from '@business/dto/user/create'
 import { CreateUserOperator } from '@controller/operations/user/create'
-import { InputCreateUser } from '@controller/serializers/user/create'
+import {
+  IInputCreateUserProps,
+  InputCreateUser,
+} from '@controller/serializers/user/create'
 import { httpResponse } from '@framework/utility/httpResponse'
 import { middyfy } from '@framework/utility/lambda'
 import { IHandlerInput, IHandlerResult } from '@framework/utility/types'
@@ -10,11 +12,12 @@ import { container } from '@shared/ioc/container'
 
 const createUser = async (event: IHandlerInput): Promise<IHandlerResult> => {
   try {
-    const requestInput = event.only<IInputCreateUserDto>([
+    const requestInput = event.only<IInputCreateUserProps>([
       'name',
       'email',
       'birthdate',
       'phone',
+      'password',
     ])
 
     const input = new InputCreateUser({
@@ -22,10 +25,7 @@ const createUser = async (event: IHandlerInput): Promise<IHandlerResult> => {
       birthdate: new Date(requestInput.birthdate),
     })
     const operator = container.get(CreateUserOperator)
-    const userResult = await operator.run(
-      input,
-      event.requestContext.authorizer
-    )
+    const userResult = await operator.run(input)
 
     if (userResult.isLeft()) {
       throw userResult.value

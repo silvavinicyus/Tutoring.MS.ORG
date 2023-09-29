@@ -1,6 +1,6 @@
-import { IDateService } from '@business/services/date/iDateService'
 import { injectable } from 'inversify'
 import dayjs from 'dayjs'
+import { IDateService } from '@business/services/date/iDateService'
 
 @injectable()
 export class DateService implements IDateService {

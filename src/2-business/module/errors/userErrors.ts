@@ -66,4 +66,15 @@ export class UserErrors extends IError {
       },
     })
   }
+
+  static emailAlreadyInUse(): IError {
+    return new UserErrors({
+      statusCode: 409,
+      body: {
+        code: 'US-107',
+        message: 'There is a user with this email',
+        shortMessage: 'EmailAlreadyInUse',
+      },
+    })
+  }
 }

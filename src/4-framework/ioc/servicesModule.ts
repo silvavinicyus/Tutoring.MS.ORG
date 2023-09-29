@@ -16,6 +16,11 @@ import { DateService } from '@framework/services/date/dateService'
 import { LoggerService } from '@framework/services/logger/loggerService'
 import { S3StorageService } from '@framework/services/s3Storage/S3StorageService'
 import { UniqueIdentifierService } from '@framework/services/uniqueIdentifier/uniqueIdentifierService'
+import {
+  INotificationService,
+  INotificationServiceToken,
+} from '@business/services/notification/iNotificationService'
+import { SnsNotificationService } from '@framework/services/notification/sns'
 
 export const servicesModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUniqueIdentifierService>(IUniqueIdentifierServiceToken).to(
@@ -25,4 +30,7 @@ export const servicesModule = new ContainerModule((bind: interfaces.Bind) => {
 
   bind<IS3StorageService>(IS3StorageServiceToken).to(S3StorageService)
   bind<IDateService>(IDateServiceToken).to(DateService)
+  bind<INotificationService>(INotificationServiceToken).to(
+    SnsNotificationService
+  )
 })
