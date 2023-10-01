@@ -24,6 +24,11 @@ export type IInputTutoringEntity = Pick<
   'date' | 'subject' | 'tutor_id' | 'student_id'
 >
 
+export type TutoringEntityKeys = Pick<
+  ITutoringEntity,
+  'student_id' | 'tutor_id' | 'subject' | 'id' | 'uuid'
+>
+
 export class TutoringEntity extends AbstractEntity<ITutoringEntity> {
   static create(
     props: IInputTutoringEntity,

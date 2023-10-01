@@ -83,6 +83,7 @@ functions:
   - "${file(${self:custom.functionsDir}/postReaction/postReaction.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroupLeader/studyGroupLeader.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroupStudent/studyGroupStudent.yml)}"
+  - "${file(${self:custom.functionsDir}/tutoring/tutoring.yml)}"
 
 resources:
   Resources:     
@@ -90,3 +91,4 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: tutoring-org-${self:provider.stage}-create-user
+        

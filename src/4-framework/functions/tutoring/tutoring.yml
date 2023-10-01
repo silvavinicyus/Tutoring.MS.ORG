@@ -1,0 +1,35 @@
+createTutoring:
+  handler: ${self:custom.functionsDir}/tutoring/create.handler
+  events:
+    - http:
+        path: /tutorings/tutor/{tutor_uuid}/student/{student_uuid}
+        method: post
+        cors: true
+findTutoringBy:
+  handler: ${self:custom.functionsDir}/tutoring/findBy.handler
+  events:
+    - http:
+        path: /tutorings/{uuid}
+        method: get
+        cors: true
+findAllTutorings:
+  handler: ${self:custom.functionsDir}/tutoring/findAll.handler
+  events:
+    - http:
+        path: /tutorings
+        method: get
+        cors: true
+updateTutoring:
+  handler: ${self:custom.functionsDir}/tutoring/update.handler
+  events:
+    - http:
+        path: /tutorings/{uuid}
+        method: put
+        cors: true
+deleteTutoring:
+  handler: ${self:custom.functionsDir}/tutoring/delete.handler
+  events:
+    - http:
+        path: /tutorings/{uuid}
+        method: delete
+        cors: true
