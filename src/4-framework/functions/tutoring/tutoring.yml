@@ -5,6 +5,9 @@ createTutoring:
         path: /tutorings/tutor/{tutor_uuid}/student/{student_uuid}
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findTutoringBy:
   handler: ${self:custom.functionsDir}/tutoring/findBy.handler
   events:
@@ -12,6 +15,9 @@ findTutoringBy:
         path: /tutorings/{uuid}
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findAllTutorings:
   handler: ${self:custom.functionsDir}/tutoring/findAll.handler
   events:
@@ -19,6 +25,9 @@ findAllTutorings:
         path: /tutorings
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 updateTutoring:
   handler: ${self:custom.functionsDir}/tutoring/update.handler
   events:
@@ -26,6 +35,9 @@ updateTutoring:
         path: /tutorings/{uuid}
         method: put
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 deleteTutoring:
   handler: ${self:custom.functionsDir}/tutoring/delete.handler
   events:
@@ -33,3 +45,6 @@ deleteTutoring:
         path: /tutorings/{uuid}
         method: delete
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'

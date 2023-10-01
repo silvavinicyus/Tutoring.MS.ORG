@@ -4,10 +4,7 @@ createUser:
     - http:
         path: /users
         method: post
-        cors: true
-        authorizer: ${self:custom.baseAuthorizer}
-        localAuthorizer:
-          name: 'authorization'
+        cors: true        
 findUserBy:
   handler: ${self:custom.functionsDir}/user/findBy.handler
   events:

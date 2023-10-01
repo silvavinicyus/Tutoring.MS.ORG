@@ -5,6 +5,9 @@ createPost:
         path: /posts
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findPostBy:
   handler: ${self:custom.functionsDir}/post/findBy.handler
   events:
@@ -12,6 +15,9 @@ findPostBy:
         path: /posts/{uuid}
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findAllPosts:
   handler: ${self:custom.functionsDir}/post/findAll.handler
   events:
@@ -19,6 +25,9 @@ findAllPosts:
         path: /posts
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 updatePost:
   handler: ${self:custom.functionsDir}/post/update.handler
   events:
@@ -26,6 +35,9 @@ updatePost:
         path: /posts/{uuid}
         method: put
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 deletePost:
   handler: ${self:custom.functionsDir}/post/delete.handler
   events:
@@ -33,3 +45,6 @@ deletePost:
         path: /posts/{uuid}
         method: delete
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'

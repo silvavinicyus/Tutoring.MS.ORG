@@ -5,6 +5,9 @@ createStudyGroupStudent:
         path: /studygroup/{group_uuid}/students
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findAllStudyGroupStudents:
   handler: ${self:custom.functionsDir}/studyGroupStudent/findAll.handler
   events:
@@ -12,6 +15,9 @@ findAllStudyGroupStudents:
         path: /studygroup/{group_uuid}/students
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 deleteStudyGroupStudent:
   handler: ${self:custom.functionsDir}/studyGroupStudent/delete.handler
   events:
@@ -19,6 +25,9 @@ deleteStudyGroupStudent:
         path: /studygroup/students/{uuid}
         method: delete
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 requestToJoinStudyGroup:
   handler: ${self:custom.functionsDir}/studyGroupStudent/requestToJoin.handler
   events:
@@ -26,6 +35,9 @@ requestToJoinStudyGroup:
         path: /studygroup/{group_uuid}/request
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 answerRequestToJoinStudyGroup:
   handler: ${self:custom.functionsDir}/studyGroupStudent/answerRequestToJoin.handler
   events:
@@ -33,3 +45,6 @@ answerRequestToJoinStudyGroup:
         path: /studygroup/request/{group_request_uuid}
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'

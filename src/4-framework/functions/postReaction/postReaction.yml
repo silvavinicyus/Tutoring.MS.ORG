@@ -5,6 +5,9 @@ createPostReaction:
         path: /posts/{uuid}/reactions
         method: post
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 findAllPostReactions:
   handler: ${self:custom.functionsDir}/postReaction/findAll.handler
   events:
@@ -12,6 +15,9 @@ findAllPostReactions:
         path: /posts/{uuid}/reactions
         method: get
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
 deletePostReaction:
   handler: ${self:custom.functionsDir}/postReaction/delete.handler
   events:
@@ -19,3 +25,6 @@ deletePostReaction:
         path: /posts/reactions/{uuid}
         method: delete
         cors: true
+        authorizer: ${self:custom.baseAuthorizer}
+        localAuthorizer:
+          name: 'authorization'
