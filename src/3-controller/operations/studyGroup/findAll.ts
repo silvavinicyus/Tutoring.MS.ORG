@@ -27,6 +27,13 @@ export class FindAllStudyGroupsOperator extends AbstractOperator<
       filters: {
         contains: input.contains,
       },
+      relations: [
+        {
+          tableName: 'creator',
+          currentTableColumn: 'creator_id',
+          foreignJoinColumn: 'id',
+        },
+      ],
     })
 
     if (studyGroups.isLeft()) {

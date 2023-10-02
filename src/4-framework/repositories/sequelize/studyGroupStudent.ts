@@ -7,6 +7,7 @@ import { IInputFindAllStudyGroupStudentsDto } from '@business/dto/studyGroupStud
 import { IInputFindByStudyGroupStudentDto } from '@business/dto/studyGroupStudent/findBy'
 import { IPaginatedResponse } from '@business/dto/useCaseOptions'
 import { createFindAllOptions } from '@framework/utility/repositoryUtils'
+import { IUserEntity } from '@domain/entities/user'
 import { ITransaction } from './transaction'
 
 @injectable()
@@ -40,7 +41,7 @@ export class StudyGroupStudentRepository
 
   async findAll(
     input: IInputFindAllStudyGroupStudentsDto
-  ): Promise<IPaginatedResponse<IStudyGroupStudentsEntity>> {
+  ): Promise<IPaginatedResponse<IUserEntity>> {
     const options = createFindAllOptions(input)
 
     const studyGroupStudent = await StudyGroupStudentsModel.findAll(options)
@@ -51,8 +52,8 @@ export class StudyGroupStudentRepository
 
     return {
       count: studyGroupStudent.length,
-      items: studyGroupStudent.map((sgStudent) =>
-        sgStudent.get({ plain: true })
+      items: studyGroupStudent.map(
+        (sgStudent) => sgStudent.get({ plain: true }).student
       ),
       page: input.pagination.page || 0,
       perPage: input.pagination.count || 10,

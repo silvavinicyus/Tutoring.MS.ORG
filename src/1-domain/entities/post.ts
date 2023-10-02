@@ -1,12 +1,12 @@
-import { ITimestamps } from '@domain/timestamps'
 import { AbstractEntity } from '@domain/abstractEntity'
+import { ITimestamps } from '@domain/timestamps'
 import { Right, right } from '@shared/either'
-import { IStudyGroupEntity } from './studyGroup'
+import { IPostReactionEntity } from './postReactions'
 import { IUserEntity } from './user'
 
 interface IPostRelations {
   owner: IUserEntity
-  group: IStudyGroupEntity
+  reactions: IPostReactionEntity[]
 }
 
 export interface IPostEntity extends ITimestamps, Partial<IPostRelations> {

@@ -27,6 +27,18 @@ export class FindTutoringByOperator extends AbstractOperator<
           value: input.uuid,
         },
       ],
+      relations: [
+        {
+          tableName: 'tutor',
+          currentTableColumn: 'tutor_id',
+          foreignJoinColumn: 'id',
+        },
+        {
+          tableName: 'student',
+          currentTableColumn: 'student_id',
+          foreignJoinColumn: 'id',
+        },
+      ],
     })
 
     if (tutoring.isLeft()) {

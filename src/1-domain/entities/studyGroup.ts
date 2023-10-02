@@ -2,11 +2,15 @@ import { AbstractEntity } from '@domain/abstractEntity'
 import { ITimestamps } from '@domain/timestamps'
 import { Right, right } from '@shared/either'
 import { IUserEntity } from './user'
+import { IPostEntity } from './post'
+import { IStudyGroupRequestEntity } from './studyGroupRequest'
 
 interface IStudyGroupRelations {
   creator: IUserEntity
   leaders: IUserEntity[]
   students: IUserEntity[]
+  posts: IPostEntity[]
+  requests: IStudyGroupRequestEntity[]
 }
 
 export interface IStudyGroupEntity

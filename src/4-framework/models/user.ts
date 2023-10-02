@@ -1,6 +1,10 @@
 import { DataTypes, Model } from 'sequelize'
 import { IUserEntity } from '@domain/entities/user'
 import { sequelize } from '../utility/database'
+import { PostModel } from './post'
+import { PostReactionsModel } from './postReactions'
+import { StudyGroupModel } from './studyGroup'
+import { TutoringModel } from './tutoring'
 
 export class UserModel extends Model<IUserEntity> {}
 
@@ -49,3 +53,45 @@ UserModel.init(
     sequelize,
   }
 )
+
+StudyGroupModel.hasOne(UserModel, {
+  foreignKey: 'id',
+  sourceKey: 'creator_id',
+  as: 'creator',
+})
+
+StudyGroupModel.hasMany(PostModel, {
+  foreignKey: 'group_id',
+  sourceKey: 'id',
+  as: 'posts',
+})
+
+PostModel.hasOne(UserModel, {
+  foreignKey: 'id',
+  sourceKey: 'owner_id',
+  as: 'owner',
+})
+
+PostReactionsModel.hasOne(UserModel, {
+  foreignKey: 'id',
+  sourceKey: 'user_id',
+  as: 'user',
+})
+
+PostModel.hasMany(PostReactionsModel, {
+  foreignKey: 'post_id',
+  sourceKey: 'id',
+  as: 'reactions',
+})
+
+TutoringModel.hasOne(UserModel, {
+  foreignKey: 'id',
+  sourceKey: 'tutor_id',
+  as: 'tutor',
+})
+
+TutoringModel.hasOne(UserModel, {
+  foreignKey: 'id',
+  sourceKey: 'student_id',
+  as: 'student',
+})

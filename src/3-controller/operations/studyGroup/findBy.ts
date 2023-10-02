@@ -27,6 +27,13 @@ export class FindByStudyGroupOperator extends AbstractOperator<
           value: input.uuid,
         },
       ],
+      relations: [
+        {
+          tableName: 'creator',
+          currentTableColumn: 'creator_id',
+          foreignJoinColumn: 'id',
+        },
+      ],
     })
 
     if (studyGroup.isLeft()) {

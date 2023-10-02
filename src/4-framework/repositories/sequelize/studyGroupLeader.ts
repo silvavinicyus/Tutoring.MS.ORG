@@ -7,6 +7,7 @@ import { IPaginatedResponse } from '@business/dto/useCaseOptions'
 import { IStudyGroupLeaderEntity } from '@domain/entities/studyGroupLeader'
 import { StudyGroupLeaderModel } from '@framework/models/studyGroupLeader'
 import { createFindAllOptions } from '@framework/utility/repositoryUtils'
+import { IUserEntity } from '@domain/entities/user'
 import { ITransaction } from './transaction'
 
 @injectable()
@@ -38,7 +39,7 @@ export class StudyGroupLeaderRepository implements IStudyGroupLeaderRepository {
 
   async findAll(
     input: IInputFindAllStudyGroupLeadersDto
-  ): Promise<IPaginatedResponse<IStudyGroupLeaderEntity>> {
+  ): Promise<IPaginatedResponse<IUserEntity>> {
     const options = createFindAllOptions(input)
 
     const studyGroupLeader = await StudyGroupLeaderModel.findAll(options)
@@ -49,7 +50,9 @@ export class StudyGroupLeaderRepository implements IStudyGroupLeaderRepository {
 
     return {
       count: studyGroupLeader.length,
-      items: studyGroupLeader.map((sgleader) => sgleader.get({ plain: true })),
+      items: studyGroupLeader.map(
+        (sgleader) => sgleader.get({ plain: true }).leader
+      ),
       page: input.pagination.page || 0,
       perPage: input.pagination.count || 10,
     }

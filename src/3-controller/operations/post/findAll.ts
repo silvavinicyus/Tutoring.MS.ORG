@@ -24,6 +24,18 @@ export class FindAllPostsOperator extends AbstractOperator<
       filters: {
         contains: input.contains,
       },
+      relations: [
+        {
+          tableName: 'owner',
+          currentTableColumn: 'user_id',
+          foreignJoinColumn: 'id',
+        },
+        {
+          tableName: 'reactions',
+          currentTableColumn: 'id',
+          foreignJoinColumn: 'post_id',
+        },
+      ],
     })
 
     if (posts.isLeft()) {

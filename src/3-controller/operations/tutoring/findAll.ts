@@ -25,6 +25,18 @@ export class FindAllTutoringsOperator extends AbstractOperator<
       filters: {
         contains: input.contains,
       },
+      relations: [
+        {
+          tableName: 'tutor',
+          currentTableColumn: 'tutor_id',
+          foreignJoinColumn: 'id',
+        },
+        {
+          tableName: 'student',
+          currentTableColumn: 'student_id',
+          foreignJoinColumn: 'id',
+        },
+      ],
     })
 
     if (tutorings.isLeft()) {

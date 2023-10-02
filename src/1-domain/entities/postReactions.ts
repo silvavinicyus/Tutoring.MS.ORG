@@ -1,11 +1,9 @@
-import { ITimestamps } from '@domain/timestamps'
 import { AbstractEntity } from '@domain/abstractEntity'
+import { ITimestamps } from '@domain/timestamps'
 import { Right, right } from '@shared/either'
-import { IPostEntity } from './post'
 import { IUserEntity } from './user'
 
 interface IPostReactionRelations {
-  post: IPostEntity
   user: IUserEntity
 }
 

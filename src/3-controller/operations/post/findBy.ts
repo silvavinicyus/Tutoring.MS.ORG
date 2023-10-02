@@ -27,6 +27,18 @@ export class FindPostByOperator extends AbstractOperator<
           value: input.uuid,
         },
       ],
+      relations: [
+        {
+          tableName: 'owner',
+          currentTableColumn: 'user_id',
+          foreignJoinColumn: 'id',
+        },
+        {
+          tableName: 'reactions',
+          currentTableColumn: 'id',
+          foreignJoinColumn: 'post_id',
+        },
+      ],
     })
 
     if (post.isLeft()) {

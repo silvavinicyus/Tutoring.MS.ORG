@@ -1,8 +1,6 @@
 import { IWhere } from '@business/repositories/where'
-import {
-  IStudyGroupLeaderEntity,
-  StudyGroupLeaderEntityKeys,
-} from '@domain/entities/studyGroupLeader'
+import { StudyGroupLeaderEntityKeys } from '@domain/entities/studyGroupLeader'
+import { IUserEntity } from '@domain/entities/user'
 import { IError } from '@shared/IError'
 import { Either } from '@shared/either'
 import { IPaginatedResponse, IUseCaseOptions } from '../useCaseOptions'
@@ -14,5 +12,5 @@ export interface IInputFindAllStudyGroupLeadersDto
 
 export type IOutputFindAllStudyGroupLeadersDto = Either<
   IError,
-  IPaginatedResponse<IStudyGroupLeaderEntity>
+  IPaginatedResponse<IUserEntity>
 >

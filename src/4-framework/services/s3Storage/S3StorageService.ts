@@ -1,6 +1,6 @@
-import { IS3StorageService } from '@business/services/s3Storage/iS3Storage'
 import { S3 } from 'aws-sdk'
 import { injectable } from 'inversify'
+import { IS3StorageService } from '@business/services/s3Storage/iS3Storage'
 
 interface IStorageS3 {
   filename: string
