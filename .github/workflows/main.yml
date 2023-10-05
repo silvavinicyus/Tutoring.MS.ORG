@@ -22,9 +22,8 @@ jobs:
       - name: Install dependencies
         run: |
               npm i serverless
-              npm i
-      - run: npm install
-      - run: npm run build
+              npm i      
+      - run: npm run test-build
         env:
           DOTENV_KEY: ${{ secrets.DOTENV_KEY }}          
       
