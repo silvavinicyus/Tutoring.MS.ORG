@@ -22,7 +22,10 @@ jobs:
       - name: Install dependencies
         run: |
               npm i serverless
-              npm i      
+              npm i dotenv-vault
+              npm i
+      - name: Download credentials
+        run: npx dotenv-vault@latest pull development
       - run: npm run test-build
         env:
           DOTENV_KEY: ${{ secrets.DOTENV_KEY }}          
