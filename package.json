@@ -12,7 +12,8 @@
     "test:staged": "npm t -- --passWithNoTests --findRelatedTests --listTests",
     "sls": "cross-env NODE_ENV=test npx serverless",
     "dev": "cross-env NODE_ENV=test npx serverless offline local-authorizers --stage dev",
-    "sql": "sequelize-cli"
+    "sql": "sequelize-cli",
+    "test-build": "node build.js"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -45,8 +46,9 @@
     "lambda-multipart-parser": "^1.0.1",
     "mime": "^3.0.0",
     "multer": "^1.4.4",
-    "mysql2": "^2.3.0",
     "parse-multipart": "^1.0.4",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
     "pizzip": "^3.1.1",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.6.5",
