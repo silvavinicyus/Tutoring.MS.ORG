@@ -12,3 +12,6 @@ envs/.prod.json
 secrets.json
 package-lock.json
 yarn.lock
+.flaskenv*
+!.env.project
+!.env.vault

@@ -1,0 +1,32 @@
+name: Deploy MS Org Serverless API
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  build:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        node-version: [14.x]
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: |
+              npm i serverless
+              npm i              
+      
+      # - name: Setup AWS Credentials
+      #   run: npx sls config credentials --provider aws --key ${{ steps.secrets.outputs.AWS_ACCESS_KEY_ID }} --secret ${{ steps.secrets.outputs.AWS_SECRET_ACCESS_KEY }}      
+      # - name: Run migrations
+      #   run: npm run sql db:migrate
+      # - name: Deploy with stage=staging
+      #   run: npx sls deploy -s ${{ steps.secrets.outputs.STAGE }} --verbose
