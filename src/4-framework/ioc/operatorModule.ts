@@ -29,6 +29,7 @@ import { FindAllTutoringsOperator } from '@controller/operations/tutoring/findAl
 import { FindTutoringByOperator } from '@controller/operations/tutoring/findBy'
 import { UpdateTutoringOperator } from '@controller/operations/tutoring/update'
 import { DeleteTutoringOperator } from '@controller/operations/tutoring/delete'
+import { UploadUserImageOperator } from '@controller/operations/user/uploadImage'
 
 export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(CreateUserOperator).toSelf()
@@ -36,6 +37,7 @@ export const operatorModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindAllUsersOperator).toSelf()
   bind(DeleteUserOperator).toSelf()
   bind(UpdateUserOperator).toSelf()
+  bind(UploadUserImageOperator).toSelf()
 
   bind(CreateStudyGroupOperator).toSelf()
   bind(FindAllStudyGroupsOperator).toSelf()

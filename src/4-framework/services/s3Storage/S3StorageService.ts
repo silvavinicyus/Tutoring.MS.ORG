@@ -1,49 +1,62 @@
 import { S3 } from 'aws-sdk'
 import { injectable } from 'inversify'
-import { IS3StorageService } from '@business/services/s3Storage/iS3Storage'
-
-interface IStorageS3 {
-  filename: string
-  folder: string
-  fileContent: Buffer
-  contentType: string
-}
+import {
+  IFile,
+  IS3StorageService,
+} from '@business/services/s3Storage/iS3Storage'
+import { uploadConfig } from '@framework/utility/storage'
 
 @injectable()
 export class S3StorageService implements IS3StorageService {
-  private client: S3
+  private publicClient: S3
+  private privateClient: S3
 
   constructor() {
-    this.client = new S3({
-      region: process.env.S3_BUCKET_REGION,
+    this.publicClient = new S3({
+      region: uploadConfig.public.region,
+    })
+    this.privateClient = new S3({
+      region: uploadConfig.private.region,
     })
   }
 
-  async save({
-    filename,
-    folder,
-    fileContent,
-    contentType,
-  }: IStorageS3): Promise<string> {
-    await this.client
+  async savePrivateFile(file: IFile, key: string): Promise<void> {
+    await this.privateClient
       .putObject({
-        Bucket: `${process.env.S3_BUCKET}/${folder}`,
-        Key: filename,
-        ACL: 'public-read',
-        Body: fileContent,
-        ContentType: contentType,
-        ContentEncoding: '7bit',
+        Bucket: uploadConfig.private.bucket,
+        Key: `${process.env.STORAGE_FOLDER}/${key}`,
+        Body: file.content,
+        ContentType: file.mimetype,
       })
       .promise()
-
-    return filename
   }
 
-  async delete(filename: string, folder: string): Promise<void> {
-    await this.client
+  async deletePrivateFile(key: string): Promise<void> {
+    await this.publicClient
       .deleteObject({
-        Bucket: `ms-notifications/${folder}`,
-        Key: filename,
+        Bucket: uploadConfig.private.bucket,
+        Key: `${process.env.STORAGE_FOLDER}/${key}`,
+      })
+      .promise()
+  }
+
+  async save(file: IFile, key: string): Promise<void> {
+    await this.publicClient
+      .putObject({
+        Bucket: uploadConfig.public.bucket,
+        Key: `${process.env.STORAGE_FOLDER}/${key}`,
+        ACL: 'public-read',
+        Body: file.content,
+        ContentType: file.mimetype,
+      })
+      .promise()
+  }
+
+  async delete(key: string): Promise<void> {
+    await this.publicClient
+      .deleteObject({
+        Bucket: uploadConfig.public.bucket,
+        Key: `${process.env.STORAGE_FOLDER}/${key}`,
       })
       .promise()
   }

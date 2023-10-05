@@ -44,6 +44,11 @@ import {
   ITutoringRepositoryToken,
 } from '@business/repositories/tutoring/iTutoringRepository'
 import { TutoringRepository } from '@framework/repositories/sequelize/tutoring'
+import {
+  IFileRepository,
+  IFileRepositoryToken,
+} from '@business/repositories/file/iFileRepository'
+import { FileRepository } from '@framework/repositories/sequelize/file'
 
 export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
   bind<IUserRepository>(IUserRepositoryToken).to(UserRepository)
@@ -75,4 +80,6 @@ export const repositoryModule = new ContainerModule((bind: interfaces.Bind) => {
   )
 
   bind<ITutoringRepository>(ITutoringRepositoryToken).to(TutoringRepository)
+
+  bind<IFileRepository>(IFileRepositoryToken).to(FileRepository)
 })

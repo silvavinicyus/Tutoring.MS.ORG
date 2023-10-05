@@ -1,19 +1,26 @@
 export const IS3StorageServiceToken = Symbol.for('IS3StorageServiceToken')
 
-export interface IStorageS3 {
+export interface IFile {
   filename: string
-  folder: string
-  fileContent: Buffer
-  contentType: string
+  mimetype: string
+  enconding: string
+  truncated: boolean
+  content: Buffer
 }
 
-export interface IS3StorageService {
-  save({
-    filename,
-    folder,
-    fileContent,
-    contentType,
-  }: IStorageS3): Promise<string>
+export const allowedMimes = [
+  'image/jpeg',
+  'image/pjpeg',
+  'image/png',
+  'image/jpg',
+]
 
-  delete(filename: string, folder: string): Promise<void>
+export interface IS3StorageService {
+  save(file: IFile, key: string): Promise<void>
+
+  delete(key: string): Promise<void>
+
+  savePrivateFile(file: IFile, key: string): Promise<void>
+
+  deletePrivateFile(key: string): Promise<void>
 }

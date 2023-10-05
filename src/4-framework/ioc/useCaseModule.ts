@@ -36,6 +36,11 @@ import { FindAllTutoringsUseCase } from '@business/useCases/tutoring/findAllTuto
 import { FindByTutoringUseCase } from '@business/useCases/tutoring/findByTutoring'
 import { UpdateTutoringUseCase } from '@business/useCases/tutoring/updateTutoring'
 import { DeleteTutoringUseCase } from '@business/useCases/tutoring/deleteTutoring'
+import { SavePrivateFileUseCase } from '@business/useCases/storage/savePrivateFile'
+import { DeletePrivateFileUseCase } from '@business/useCases/storage/deletePrivateFile'
+import { CreateFileUseCase } from '@business/useCases/file/createFile'
+import { DeleteFileUseCase } from '@business/useCases/file/deleteFile'
+import { FindByFileUseCase } from '@business/useCases/file/findByFile'
 
 export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(VerifyProfileUseCase).toSelf()
@@ -85,4 +90,11 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(FindByTutoringUseCase).toSelf()
   bind(UpdateTutoringUseCase).toSelf()
   bind(DeleteTutoringUseCase).toSelf()
+
+  bind(SavePrivateFileUseCase).toSelf()
+  bind(DeletePrivateFileUseCase).toSelf()
+
+  bind(CreateFileUseCase).toSelf()
+  bind(DeleteFileUseCase).toSelf()
+  bind(FindByFileUseCase).toSelf()
 })
