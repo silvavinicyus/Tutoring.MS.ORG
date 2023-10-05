@@ -66,7 +66,8 @@ custom:
       noFrozenLockfile: true
     includeModules:
       forceInclude:
-        - mysql2
+        - pg
+        - pg-hstore
 
 plugins:
   - serverless-disable-functions
