@@ -4,6 +4,8 @@ import { IOutputDeleteStudyGroupLeaderDto } from '@business/dto/studyGroupLeader
 import { DeleteStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/deleteStudyGroupLeader'
 import { FindByStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/findByStudyGroupLeader'
 import { left } from '@shared/either'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,16 +17,27 @@ export class DeleteStudyGroupLeaderOperator extends AbstractOperator<
     @inject(DeleteStudyGroupLeaderUseCase)
     private deleteStudyGroupLeader: DeleteStudyGroupLeaderUseCase,
     @inject(FindByStudyGroupLeaderUseCase)
-    private findByStudyGroupLeader: FindByStudyGroupLeaderUseCase
+    private findByStudyGroupLeader: FindByStudyGroupLeaderUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputDeleteStudyGroupLeader
+    input: InputDeleteStudyGroupLeader,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputDeleteStudyGroupLeaderDto> {
     this.exec(input)
 
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['delete_study_group_leader'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
     const studyGroupLeader = await this.findByStudyGroupLeader.exec({
       where: [
         {

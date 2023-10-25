@@ -4,6 +4,8 @@ import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStu
 import { FindAllStudyGroupLeadersUseCase } from '@business/useCases/studyGroupLeader/findAllStudyGroupLeaders'
 import { InputFindAllStudyGroupLeaders } from '@controller/serializers/studyGroupLeader/findAll'
 import { left } from '@shared/either'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,15 +17,27 @@ export class FindAllStudyGroupLeadersOperator extends AbstractOperator<
     @inject(FindAllStudyGroupLeadersUseCase)
     private findAllStudyGroupLeaders: FindAllStudyGroupLeadersUseCase,
     @inject(FindStudyGroupByUseCase)
-    private findStudyGroupBy: FindStudyGroupByUseCase
+    private findStudyGroupBy: FindStudyGroupByUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputFindAllStudyGroupLeaders
+    input: InputFindAllStudyGroupLeaders,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputFindAllStudyGroupLeadersDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['view_study_group_leader'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const studyGroup = await this.findStudyGroupBy.exec({
       where: [

@@ -7,6 +7,8 @@ import { left } from '@shared/either'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { FindByStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLeader/findByStudyGroupLeader'
 import { StudyGroupLeaderErrors } from '@business/module/errors/studyGroupLeaderErrors'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -22,15 +24,27 @@ export class CreateStudyGroupLeaderOperator extends AbstractOperator<
     @inject(FindByUserUseCase)
     private findByUser: FindByUserUseCase,
     @inject(FindByStudyGroupLeaderUseCase)
-    private findByStudyGroupLeader: FindByStudyGroupLeaderUseCase
+    private findByStudyGroupLeader: FindByStudyGroupLeaderUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputCreateStudyGroupLeader
+    input: InputCreateStudyGroupLeader,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputCreateStudyGroupLeaderDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['create_study_group_leader'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const studyGroup = await this.findStudyGroupBy.exec({
       where: [

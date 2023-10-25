@@ -4,6 +4,8 @@ import { DeletePostReactionUseCase } from '@business/useCases/postReaction/delet
 import { FindByPostReactionUseCase } from '@business/useCases/postReaction/findByPostReaction'
 import { InputDeletePostReaction } from '@controller/serializers/postReaction/delete'
 import { left } from '@shared/either'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,15 +17,27 @@ export class DeletePostReactionOperator extends AbstractOperator<
     @inject(DeletePostReactionUseCase)
     private deletePostReaction: DeletePostReactionUseCase,
     @inject(FindByPostReactionUseCase)
-    private findPostReaction: FindByPostReactionUseCase
+    private findPostReaction: FindByPostReactionUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputDeletePostReaction
+    input: InputDeletePostReaction,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputDeletePostReactionDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['delete_post_reaction'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const postReaction = await this.findPostReaction.exec({
       where: [

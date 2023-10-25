@@ -4,6 +4,8 @@ import { FindByPostUseCase } from '@business/useCases/post/findByPost'
 import { CreatePostReactionUseCase } from '@business/useCases/postReaction/createPostReaction'
 import { InputCreatePostReaction } from '@controller/serializers/postReaction/create'
 import { left } from '@shared/either'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,15 +17,27 @@ export class CreatePostReactionOperator extends AbstractOperator<
     @inject(CreatePostReactionUseCase)
     private createPostReaction: CreatePostReactionUseCase,
     @inject(FindByPostUseCase)
-    private findPost: FindByPostUseCase
+    private findPost: FindByPostUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputCreatePostReaction
+    input: InputCreatePostReaction,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputCreatePostReactionDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['create_post_reaction'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const post = await this.findPost.exec({
       where: [

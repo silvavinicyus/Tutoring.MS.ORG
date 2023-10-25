@@ -22,7 +22,10 @@ const createPost = async (event: IHandlerInput): Promise<IHandlerResult> => {
     const input = new InputCreatePost({ ...requestInput })
     const operator = container.get(CreatePostOperator)
 
-    const postResult = await operator.run(input)
+    const postResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (postResult.isLeft()) {
       throw postResult.value

@@ -4,6 +4,8 @@ import { CreatePostUseCase } from '@business/useCases/post/createPost'
 import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
 import { InputCreatePost } from '@controller/serializers/post/create'
 import { left } from '@shared/either'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,12 +17,26 @@ export class CreatePostOperator extends AbstractOperator<
     @inject(CreatePostUseCase)
     private createPost: CreatePostUseCase,
     @inject(FindStudyGroupByUseCase)
-    private findStudyGroup: FindStudyGroupByUseCase
+    private findStudyGroup: FindStudyGroupByUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
-  async run(input: InputCreatePost): Promise<IOutputCreatePostDto> {
+  async run(
+    input: InputCreatePost,
+    authorizer: IAuthorizerInformation
+  ): Promise<IOutputCreatePostDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['create_post'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const studyGroup = await this.findStudyGroup.exec({
       where: [

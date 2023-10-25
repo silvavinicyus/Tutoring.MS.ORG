@@ -4,6 +4,8 @@ import { FindByPostUseCase } from '@business/useCases/post/findByPost'
 import { UpdatePostUseCase } from '@business/useCases/post/updatePost'
 import { InputUpdatePost } from '@controller/serializers/post/update'
 import { left } from '@shared/either'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,13 +17,27 @@ export class UpdatePostOperator extends AbstractOperator<
     @inject(UpdatePostUseCase)
     private updatePost: UpdatePostUseCase,
     @inject(FindByPostUseCase)
-    private findPostBy: FindByPostUseCase
+    private findPostBy: FindByPostUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
-  async run(input: InputUpdatePost): Promise<IOutputUpdatePostDto> {
+  async run(
+    input: InputUpdatePost,
+    authorizer: IAuthorizerInformation
+  ): Promise<IOutputUpdatePostDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['update_post'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const post = await this.findPostBy.exec({
       where: [
