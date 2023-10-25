@@ -1,4 +1,4 @@
-service: Tutoring.MS.ORG
+service: tutoring-ms-org
 
 frameworkVersion: "3"
 
