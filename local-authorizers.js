@@ -1,8 +1,6 @@
 const { Lambda } = require('aws-sdk')
 
 const authorization = async (event) => {
-  console.log('_____teste_____')
-
   try {
     const lambdaClient = new Lambda({
       region: 'us-east-1',
