@@ -14,14 +14,14 @@ jobs:
         node-version: [14.x]
     
     steps:
+      - uses: actions/checkout@v2
       - name: "Create env file local"
         id: env
         run: |
-          chmod a+x ./envs.sh
-          ./envs.sh ${{ secrets.SECRETS_URL }}
+          chmod a+x ./.github/workflows/envs.sh
+          ./.github/workflows/envs.sh ${{ secrets.SECRETS_URL }}
         shell: bash
 
-      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
