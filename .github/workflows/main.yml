@@ -14,25 +14,29 @@ jobs:
         node-version: [14.x]
     
     steps:
+      - name: "Create env file local"
+        id: env
+        run: |
+          chmod a+x ./.github/workflows/envs.sh
+          ./.github/workflows/envs.sh ${{ secrets.SECRETS_URL }}
+        shell: bash
+
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: Install dependencies
         run: |
-              npm i serverless
-              npm i dotenv-vault
-              npm i
-      - name: Download credentials
-        run: npx dotenv-vault@latest pull development
-      - run: npm run test-build
-        env:
-          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}          
-      
-      # - name: Setup AWS Credentials
-      #   run: npx sls config credentials --provider aws --key ${{ steps.secrets.outputs.AWS_ACCESS_KEY_ID }} --secret ${{ steps.secrets.outputs.AWS_SECRET_ACCESS_KEY }}      
-      # - name: Run migrations
-      #   run: npm run sql db:migrate
-      # - name: Deploy with stage=staging
-      #   run: npx sls deploy -s ${{ steps.secrets.outputs.STAGE }} --verbose
+              npm i      
+              npm i serverless     
+
+      - name: Setup AWS Credentials
+        run: npx sls config credentials --provider aws --key ${{ secrets.outputs.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.outputs.AWS_SECRET_ACCESS_KEY }}      
+        
+      - name: Run migrations
+        run: npm run sql db:migrate
+
+      - name: Deploy with stage=staging
+        run: npx sls deploy -s staging --verbose
