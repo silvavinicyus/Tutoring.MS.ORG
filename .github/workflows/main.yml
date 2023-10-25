@@ -17,8 +17,8 @@ jobs:
       - name: "Create env file local"
         id: env
         run: |
-          chmod a+x ./.github/workflows/envs.sh
-          ./.github/workflows/envs.sh ${{ secrets.SECRETS_URL }}
+          chmod a+x ./envs.sh
+          ./envs.sh ${{ secrets.SECRETS_URL }}
         shell: bash
 
       - uses: actions/checkout@v2
