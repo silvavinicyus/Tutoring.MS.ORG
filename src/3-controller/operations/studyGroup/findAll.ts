@@ -47,6 +47,16 @@ export class FindAllStudyGroupsOperator extends AbstractOperator<
           currentTableColumn: 'creator_id',
           foreignJoinColumn: 'id',
         },
+        {
+          tableName: 'leaders',
+          currentTableColumn: '',
+          foreignJoinColumn: '',
+        },
+        {
+          tableName: 'students',
+          currentTableColumn: '',
+          foreignJoinColumn: '',
+        },
       ],
     })
 

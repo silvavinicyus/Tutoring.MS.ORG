@@ -32,7 +32,10 @@ const findAllStudyGroups = async (
     })
 
     const operator = container.get(FindAllStudyGroupsOperator)
-    const studyGroup = await operator.run(input)
+    const studyGroup = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (studyGroup.isLeft()) {
       throw studyGroup.value

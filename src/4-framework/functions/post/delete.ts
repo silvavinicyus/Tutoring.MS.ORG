@@ -14,7 +14,10 @@ const deletePost = async (event: IHandlerInput): Promise<IHandlerResult> => {
     })
 
     const operator = container.get(DeletePostOperator)
-    const postResult = await operator.run(input)
+    const postResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (postResult.isLeft()) {
       throw postResult.value

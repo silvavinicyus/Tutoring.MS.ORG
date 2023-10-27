@@ -16,7 +16,10 @@ const deleteStudyGroup = async (
     })
 
     const operator = container.get(DeleteStudyGroupOperator)
-    const studyGroupResult = await operator.run(input)
+    const studyGroupResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (studyGroupResult.isLeft()) {
       throw studyGroupResult.value

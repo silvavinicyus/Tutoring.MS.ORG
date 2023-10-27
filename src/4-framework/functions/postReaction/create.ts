@@ -25,7 +25,10 @@ const createPostReaction = async (
 
     const operator = container.get(CreatePostReactionOperator)
 
-    const postReactionResult = await operator.run(input)
+    const postReactionResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (postReactionResult.isLeft()) {
       throw postReactionResult.value

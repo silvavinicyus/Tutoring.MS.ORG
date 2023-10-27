@@ -7,6 +7,8 @@ import { FindByStudyGroupStudentUseCase } from '@business/useCases/studyGroupStu
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { InputCreateStudyGroupStudent } from '@controller/serializers/studyGroupStudent/create'
 import { left } from '@shared/either'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -22,15 +24,27 @@ export class CreateStudyGroupStudentOperator extends AbstractOperator<
     @inject(FindByUserUseCase)
     private findByUser: FindByUserUseCase,
     @inject(FindByStudyGroupStudentUseCase)
-    private findByStudyGroupStudent: FindByStudyGroupStudentUseCase
+    private findByStudyGroupStudent: FindByStudyGroupStudentUseCase,
+    @inject(VerifyProfileUseCase)
+    private verifyProfile: VerifyProfileUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputCreateStudyGroupStudent
+    input: InputCreateStudyGroupStudent,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputCreateStudyGroupStudentDto> {
     this.exec(input)
+
+    const authUser = await this.verifyProfile.exec({
+      permissions: ['create_study_group_student'],
+      user: authorizer,
+    })
+
+    if (authUser.isLeft()) {
+      return left(authUser.value)
+    }
 
     const studyGroup = await this.findStudyGroupBy.exec({
       where: [

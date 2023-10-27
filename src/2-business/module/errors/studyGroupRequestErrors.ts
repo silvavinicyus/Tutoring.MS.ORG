@@ -44,4 +44,15 @@ export class StudyGroupRequestErrors extends IError {
       },
     })
   }
+
+  static alreadyInGroup(): IError {
+    return new StudyGroupRequestErrors({
+      statusCode: 400,
+      body: {
+        code: 'SGR-105',
+        message: 'You are already in this study group',
+        shortMessage: 'alreadyInGroup',
+      },
+    })
+  }
 }

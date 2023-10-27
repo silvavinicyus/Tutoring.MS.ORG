@@ -15,6 +15,7 @@ export interface IAuthorizerInformation {
 export interface IInputAuthorizeUseCase {
   permissions: string[]
   user: IAuthorizerInformation
+  openException?: (user: IAuthorizerInformation) => Promise<boolean>
 }
 
 export type IOutputAuthorizeUseCase = Either<IError, IAuthorizerInformation>

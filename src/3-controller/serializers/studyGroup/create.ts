@@ -1,8 +1,13 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 import { IInputCreateStudyGroupDto } from '@business/dto/studyGroup/create'
 import { AbstractSerializer } from '../abstractSerializer'
 
-export class InputCreateStudyGroup extends AbstractSerializer<IInputCreateStudyGroupDto> {
+export type IInputCreateStudyGroupProps = Omit<
+  IInputCreateStudyGroupDto,
+  'creator_id'
+>
+
+export class InputCreateStudyGroup extends AbstractSerializer<IInputCreateStudyGroupProps> {
   @IsNotEmpty()
   @IsString()
   name: string
@@ -10,8 +15,4 @@ export class InputCreateStudyGroup extends AbstractSerializer<IInputCreateStudyG
   @IsNotEmpty()
   @IsString()
   subject: string
-
-  @IsNotEmpty()
-  @IsNumber()
-  creator_id: number
 }

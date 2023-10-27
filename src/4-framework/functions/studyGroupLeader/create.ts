@@ -25,7 +25,10 @@ const createStudyGroupLeader = async (
 
     const operator = container.get(CreateStudyGroupLeaderOperator)
 
-    const studyGroupLeaderResult = await operator.run(input)
+    const studyGroupLeaderResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (studyGroupLeaderResult.isLeft()) {
       throw studyGroupLeaderResult.value

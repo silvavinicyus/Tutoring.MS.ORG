@@ -1,4 +1,7 @@
 import { inject, injectable } from 'inversify'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { RolesErrors } from '@business/module/errors/rolesErrors'
+import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
 import { DeleteStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/deleteStudyGroupRequest'
 import { FindByStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/findbyStudyGroupRequest'
 import { CreateStudyGroupStudentUseCase } from '@business/useCases/studyGroupStudent/createStudyGroupStudent'
@@ -23,13 +26,16 @@ export class AnswerRequestToJoinStudyGroupOperator extends AbstractOperator<
     @inject(CreateStudyGroupStudentUseCase)
     private createStudyGroupStudent: CreateStudyGroupStudentUseCase,
     @inject(FindByStudyGroupRequestUseCase)
-    private findByStudyGroupRequest: FindByStudyGroupRequestUseCase
+    private findByStudyGroupRequest: FindByStudyGroupRequestUseCase,
+    @inject(FindStudyGroupByUseCase)
+    private findByStudyGroup: FindStudyGroupByUseCase
   ) {
     super()
   }
 
   async run(
-    input: InputAnswerRequestToJoinStudyGroup
+    input: InputAnswerRequestToJoinStudyGroup,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputAnswerRequestToJoinDto> {
     this.exec(input)
 
@@ -44,6 +50,31 @@ export class AnswerRequestToJoinStudyGroupOperator extends AbstractOperator<
 
     if (groupRequest.isLeft()) {
       return left(groupRequest.value)
+    }
+
+    const studyGroup = await this.findByStudyGroup.exec({
+      where: [
+        {
+          column: 'id',
+          value: groupRequest.value.group_id,
+        },
+      ],
+    })
+
+    if (studyGroup.isLeft()) {
+      return left(studyGroup.value)
+    }
+
+    const isAuthorizerGroupLeader =
+      authorizer.user_real_id === studyGroup.value.creator_id
+
+    const isAuthorizerBetweenGroupLeaders =
+      studyGroup.value.leaders.find(
+        (leader) => leader.id === authorizer.user_real_id
+      ) !== undefined
+
+    if (!isAuthorizerBetweenGroupLeaders && !isAuthorizerGroupLeader) {
+      return left(RolesErrors.notAllowed())
     }
 
     if (!input.answer) {

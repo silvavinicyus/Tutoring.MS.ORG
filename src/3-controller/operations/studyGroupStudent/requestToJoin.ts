@@ -5,6 +5,8 @@ import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
 import { CreateStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/createStudyGroupRequest'
 import { left } from '@shared/either'
+import { IAuthorizerInformation } from '@business/dto/role/authorize'
+import { StudyGroupRequestErrors } from '@business/module/errors/studyGroupRequestErrors'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -24,15 +26,16 @@ export class RequestToJoinStudyGroupOperator extends AbstractOperator<
   }
 
   async run(
-    input: InputRequestToJoinStudyGroup
+    input: InputRequestToJoinStudyGroup,
+    authorizer: IAuthorizerInformation
   ): Promise<IOutputCreateStudyGroupRequestDto> {
     this.exec(input)
 
     const requester = await this.findByUser.exec({
       where: [
         {
-          column: 'uuid',
-          value: input.requester_uuid,
+          column: 'id',
+          value: authorizer.user_real_id,
         },
       ],
     })
@@ -48,10 +51,25 @@ export class RequestToJoinStudyGroupOperator extends AbstractOperator<
           value: input.group_uuid,
         },
       ],
+      relations: [
+        {
+          tableName: 'students',
+          currentTableColumn: '',
+          foreignJoinColumn: '',
+        },
+      ],
     })
 
     if (studyGroup.isLeft()) {
       return left(studyGroup.value)
+    }
+
+    const isRequesterAlreadyInGroup = studyGroup.value.students.find(
+      (student) => +student.id === +authorizer.user_real_id
+    )
+
+    if (isRequesterAlreadyInGroup) {
+      return left(StudyGroupRequestErrors.alreadyInGroup())
     }
 
     const groupRequest = await this.createStudyGroupRequest.exec({

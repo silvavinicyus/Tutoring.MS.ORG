@@ -34,7 +34,10 @@ const findAllPostReactions = async (
     })
 
     const operator = container.get(FindAllPostReactionsOperator)
-    const postReactions = await operator.run(input)
+    const postReactions = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (postReactions.isLeft()) {
       throw postReactions.value

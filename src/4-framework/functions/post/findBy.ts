@@ -14,7 +14,7 @@ const findPostBy = async (event: IHandlerInput): Promise<IHandlerResult> => {
     })
 
     const operator = container.get(FindPostByOperator)
-    const post = await operator.run(input)
+    const post = await operator.run(input, event.requestContext.authorizer)
 
     if (post.isLeft()) {
       throw post.value

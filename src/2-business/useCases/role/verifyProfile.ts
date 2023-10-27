@@ -19,7 +19,13 @@ export class VerifyProfileUseCase
     if (
       !allowedPermissions.some((element) => userPermissions.includes(element))
     ) {
-      return left(RolesErrors.notAllowed())
+      const exceptionResult = input.openException
+        ? input.openException(input.user)
+        : false
+
+      return exceptionResult
+        ? right(input.user)
+        : left(RolesErrors.notAllowed())
     }
 
     return right({
