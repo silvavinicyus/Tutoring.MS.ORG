@@ -4,6 +4,8 @@ import { sequelize } from '../utility/database'
 import { PostModel } from './post'
 import { PostReactionsModel } from './postReactions'
 import { StudyGroupModel } from './studyGroup'
+import { StudyGroupLeaderModel } from './studyGroupLeader'
+import { StudyGroupStudentsModel } from './studyGroupStudents'
 import { TutoringModel } from './tutoring'
 
 export class UserModel extends Model<IUserEntity> {}
@@ -58,6 +60,30 @@ StudyGroupModel.hasOne(UserModel, {
   foreignKey: 'id',
   sourceKey: 'creator_id',
   as: 'creator',
+})
+
+StudyGroupModel.belongsToMany(UserModel, {
+  through: StudyGroupLeaderModel,
+  foreignKey: 'group_id',
+  as: 'leaders',
+})
+
+UserModel.belongsToMany(StudyGroupModel, {
+  through: StudyGroupLeaderModel,
+  foreignKey: 'leader_id',
+  as: 'leader_groups',
+})
+
+StudyGroupModel.belongsToMany(UserModel, {
+  through: StudyGroupStudentsModel,
+  foreignKey: 'group_id',
+  as: 'students',
+})
+
+UserModel.belongsToMany(StudyGroupModel, {
+  through: StudyGroupStudentsModel,
+  foreignKey: 'student_id',
+  as: 'students_group',
 })
 
 StudyGroupModel.hasMany(PostModel, {

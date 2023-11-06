@@ -28,7 +28,10 @@ const findAllStudyGroupLeaders = async (
     })
 
     const operator = container.get(FindAllStudyGroupLeadersOperator)
-    const studyGroupLeaders = await operator.run(input)
+    const studyGroupLeaders = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (studyGroupLeaders.isLeft()) {
       throw studyGroupLeaders.value

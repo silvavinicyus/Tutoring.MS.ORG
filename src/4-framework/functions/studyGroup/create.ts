@@ -1,7 +1,9 @@
 import '@framework/ioc/inversify.config'
-import { IInputCreateStudyGroupDto } from '@business/dto/studyGroup/create'
 import { CreateStudyGroupOperator } from '@controller/operations/studyGroup/create'
-import { InputCreateStudyGroup } from '@controller/serializers/studyGroup/create'
+import {
+  IInputCreateStudyGroupProps,
+  InputCreateStudyGroup,
+} from '@controller/serializers/studyGroup/create'
 import { httpResponse } from '@framework/utility/httpResponse'
 import { middyfy } from '@framework/utility/lambda'
 import { IHandlerInput, IHandlerResult } from '@framework/utility/types'
@@ -12,9 +14,8 @@ const createStudyGroup = async (
   event: IHandlerInput
 ): Promise<IHandlerResult> => {
   try {
-    const requestInput = event.only<IInputCreateStudyGroupDto>([
+    const requestInput = event.only<IInputCreateStudyGroupProps>([
       'name',
-      'creator_id',
       'subject',
     ])
 
@@ -22,7 +23,10 @@ const createStudyGroup = async (
       ...requestInput,
     })
     const operator = container.get(CreateStudyGroupOperator)
-    const studyGroupResult = await operator.run(input)
+    const studyGroupResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (studyGroupResult.isLeft()) {
       throw studyGroupResult.value

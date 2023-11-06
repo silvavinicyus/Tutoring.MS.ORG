@@ -7,15 +7,10 @@ export type IInputRequestToJoinStudyGroupProps = Omit<
   'group_id' | 'requester_id'
 > & {
   group_uuid: string
-  requester_uuid: string
 }
 
 export class InputRequestToJoinStudyGroup extends AbstractSerializer<IInputRequestToJoinStudyGroupProps> {
   @IsNotEmpty()
   @IsUUID('4')
   group_uuid: string
-
-  @IsNotEmpty()
-  @IsUUID('4')
-  requester_uuid: string
 }

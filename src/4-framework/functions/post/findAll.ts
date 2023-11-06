@@ -34,7 +34,7 @@ const findAllPosts = async (event: IHandlerInput): Promise<IHandlerResult> => {
     })
 
     const operator = container.get(FindAllPostsOperator)
-    const posts = await operator.run(input)
+    const posts = await operator.run(input, event.requestContext.authorizer)
 
     if (posts.isLeft()) {
       throw posts.value

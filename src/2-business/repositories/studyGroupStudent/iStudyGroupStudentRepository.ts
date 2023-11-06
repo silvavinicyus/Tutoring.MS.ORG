@@ -1,4 +1,5 @@
 import { IInputDeleteStudyGroupStudentDto } from '@business/dto/studyGroupStudent/delete'
+import { IInputDeleteManyGroupStudentsDto } from '@business/dto/studyGroupStudent/deleteMany'
 import { IInputFindAllStudyGroupStudentsDto } from '@business/dto/studyGroupStudent/findAll'
 import { IInputFindByStudyGroupStudentDto } from '@business/dto/studyGroupStudent/findBy'
 import { ITransaction } from '@business/dto/transaction/create'
@@ -23,6 +24,10 @@ export interface IStudyGroupStudentRepository {
   ): Promise<IPaginatedResponse<IUserEntity>>
   delete(
     input: IInputDeleteStudyGroupStudentDto,
+    trx?: ITransaction
+  ): Promise<void>
+  deleteMany(
+    input: IInputDeleteManyGroupStudentsDto,
     trx?: ITransaction
   ): Promise<void>
 }

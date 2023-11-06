@@ -18,7 +18,7 @@ const updatePost = async (event: IHandlerInput): Promise<IHandlerResult> => {
     })
 
     const operator = container.get(UpdatePostOperator)
-    const post = await operator.run(input)
+    const post = await operator.run(input, event.requestContext.authorizer)
 
     if (post.isLeft()) {
       throw post.value

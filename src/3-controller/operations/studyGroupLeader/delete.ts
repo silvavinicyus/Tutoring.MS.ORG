@@ -6,6 +6,8 @@ import { FindByStudyGroupLeaderUseCase } from '@business/useCases/studyGroupLead
 import { left } from '@shared/either'
 import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
+import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
+import { RolesErrors } from '@business/module/errors/rolesErrors'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -19,7 +21,9 @@ export class DeleteStudyGroupLeaderOperator extends AbstractOperator<
     @inject(FindByStudyGroupLeaderUseCase)
     private findByStudyGroupLeader: FindByStudyGroupLeaderUseCase,
     @inject(VerifyProfileUseCase)
-    private verifyProfile: VerifyProfileUseCase
+    private verifyProfile: VerifyProfileUseCase,
+    @inject(FindStudyGroupByUseCase)
+    private findStudyGroup: FindStudyGroupByUseCase
   ) {
     super()
   }
@@ -38,6 +42,7 @@ export class DeleteStudyGroupLeaderOperator extends AbstractOperator<
     if (authUser.isLeft()) {
       return left(authUser.value)
     }
+
     const studyGroupLeader = await this.findByStudyGroupLeader.exec({
       where: [
         {
@@ -49,6 +54,26 @@ export class DeleteStudyGroupLeaderOperator extends AbstractOperator<
 
     if (studyGroupLeader.isLeft()) {
       return left(studyGroupLeader.value)
+    }
+
+    const group = await this.findStudyGroup.exec({
+      where: [
+        {
+          column: 'id',
+          value: studyGroupLeader.value.group_id,
+        },
+      ],
+    })
+
+    if (group.isLeft()) {
+      return left(group.value)
+    }
+
+    const isAuthorizerCreator =
+      group.value.creator_id === +authorizer.user_real_id
+
+    if (!isAuthorizerCreator) {
+      return left(RolesErrors.notAllowed())
     }
 
     const studyGroupLeaderResult = await this.deleteStudyGroupLeader.exec({

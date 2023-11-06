@@ -16,7 +16,10 @@ const deletePostReaction = async (
     })
 
     const operator = container.get(DeletePostReactionOperator)
-    const postReactionResult = await operator.run(input)
+    const postReactionResult = await operator.run(
+      input,
+      event.requestContext.authorizer
+    )
 
     if (postReactionResult.isLeft()) {
       throw postReactionResult.value
