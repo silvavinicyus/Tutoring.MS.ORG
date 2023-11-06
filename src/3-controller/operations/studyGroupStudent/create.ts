@@ -9,6 +9,7 @@ import { InputCreateStudyGroupStudent } from '@controller/serializers/studyGroup
 import { left } from '@shared/either'
 import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
+import { RolesErrors } from '@business/module/errors/rolesErrors'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -53,10 +54,27 @@ export class CreateStudyGroupStudentOperator extends AbstractOperator<
           value: input.group_uuid,
         },
       ],
+      relations: [
+        {
+          tableName: 'leaders',
+          currentTableColumn: '',
+          foreignJoinColumn: '',
+        },
+      ],
     })
 
     if (studyGroup.isLeft()) {
       return left(studyGroup.value)
+    }
+
+    const isAuthorizerCreator =
+      studyGroup.value.creator_id !== +authorizer.user_real_id
+    const isAuthorizerLeader = studyGroup.value.leaders.find(
+      (leader) => leader.id === +authorizer.user_real_id
+    )
+
+    if (!isAuthorizerCreator || !isAuthorizerLeader) {
+      return left(RolesErrors.notAllowed())
     }
 
     const student = await this.findByUser.exec({
