@@ -32,7 +32,7 @@ updateTutoring:
   handler: ${self:custom.functionsDir}/tutoring/update.handler
   events:
     - http:
-        path: /tutorings/{uuid}
+        path: /tutorings/{uuid}/update
         method: put
         cors: true
         authorizer: ${self:custom.baseAuthorizer}
@@ -42,7 +42,7 @@ deleteTutoring:
   handler: ${self:custom.functionsDir}/tutoring/delete.handler
   events:
     - http:
-        path: /tutorings/{uuid}
+        path: /tutorings/{uuid}/delete
         method: delete
         cors: true
         authorizer: ${self:custom.baseAuthorizer}
