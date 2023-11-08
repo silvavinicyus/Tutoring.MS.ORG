@@ -2,7 +2,7 @@ createPostReaction:
   handler: ${self:custom.functionsDir}/postReaction/create.handler
   events:
     - http:
-        path: /posts/{uuid}/reactions
+        path: /posts/{uuid}/reactions/create
         method: post
         cors: true
         authorizer: ${self:custom.baseAuthorizer}

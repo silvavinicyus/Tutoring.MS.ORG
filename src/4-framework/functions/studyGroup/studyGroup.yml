@@ -2,7 +2,7 @@ createStudyGroup:
   handler: ${self:custom.functionsDir}/studyGroup/create.handler
   events:
     - http:
-        path: /studygroup
+        path: /studygroup/create
         method: post
         cors: true
         authorizer: ${self:custom.baseAuthorizer}
@@ -32,7 +32,7 @@ deleteStudyGroup:
   handler: ${self:custom.functionsDir}/studyGroup/delete.handler
   events:
     - http:
-        path: /studygroup/{uuid}
+        path: /studygroup/{uuid}/delete
         method: delete
         cors: true
         authorizer: ${self:custom.baseAuthorizer}

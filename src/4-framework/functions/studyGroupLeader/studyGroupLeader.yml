@@ -2,7 +2,7 @@ createStudyGroupLeader:
   handler: ${self:custom.functionsDir}/studyGroupLeader/create.handler
   events:
     - http:
-        path: /studygroup/{group_uuid}/leaders
+        path: /studygroup/{group_uuid}/leaders/create
         method: post
         cors: true
         authorizer: ${self:custom.baseAuthorizer}

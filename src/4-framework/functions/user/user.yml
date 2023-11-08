@@ -2,7 +2,7 @@ createUser:
   handler: ${self:custom.functionsDir}/user/create.handler
   events:
     - http:
-        path: /users
+        path: /users/create
         method: post
         cors: true        
 findUserBy:
@@ -29,7 +29,7 @@ updateUser:
   handler: ${self:custom.functionsDir}/user/update.handler
   events:
     - http:
-        path: /users/{uuid}
+        path: /users/{uuid}/update
         method: put
         cors: true
         authorizer: ${self:custom.baseAuthorizer}
@@ -39,7 +39,7 @@ deleteUser:
   handler: ${self:custom.functionsDir}/user/delete.handler
   events:
     - http:
-        path: /users/{uuid}
+        path: /users/{uuid}/delete
         method: delete
         cors: true
         authorizer: ${self:custom.baseAuthorizer}
