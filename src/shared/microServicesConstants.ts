@@ -9,6 +9,8 @@ export const MS_ORG = {
   sns: {
     endpoint: process.env.IS_OFFLINE ? 'http://localhost:4099' : ``,
     createUser: process.env.SNS_CREATE_USER,
+    createOrUpdateTutoring: process.env.SNS_CREATE_TUTORING,
+    createOrUpdateStudyGroup: process.env.SNS_CREATE_STUDY_GROUP,
   },
 }
 

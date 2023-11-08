@@ -3,6 +3,5 @@ subCreateUserNotification:
   enabled: ${self:custom.enable-functions.${opt:stage}, false}  
   events:
     - sns:
-        arn:
-          Ref: CreateUserSNSTopic
+        arn: ${self:provider.environment.SNS_CREATE_USER}
         topicName: tutoring-org-${self:provider.stage}-create-user

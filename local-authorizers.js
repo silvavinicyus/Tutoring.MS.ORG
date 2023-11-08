@@ -9,7 +9,7 @@ const authorization = async (event) => {
 
     const result = await lambdaClient
       .invoke({
-        FunctionName: 'tutoring-auth-dev-authorization',
+        FunctionName: 'tutoring-ms-auth-dev-authorization',
         Payload: JSON.stringify(event),
       })
       .promise()
