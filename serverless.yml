@@ -88,8 +88,11 @@ functions:
 
 resources:
   Resources:     
-    CreateUserSNSTopic:
+    CreateOrUpdateTutoringSNSTopic:
       Type: AWS::SNS::Topic
       Properties:
-        TopicName: tutoring-org-${self:provider.stage}-create-user
-        
+        TopicName: tutoring-org-${self:provider.stage}-create-update-tutoring
+    CreateOrUpdateStudyGroupSNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: tutoring-org-${self:provider.stage}-create-update-study-group

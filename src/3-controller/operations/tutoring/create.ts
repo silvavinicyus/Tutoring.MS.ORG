@@ -4,6 +4,7 @@ import { IOutputCreateTutoringDto } from '@business/dto/tutoring/create'
 import { CreateTutoringUseCase } from '@business/useCases/tutoring/createTutoring'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { left } from '@shared/either'
+import { CreateOrUpdateTutoringNotificatoinUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,7 +16,9 @@ export class CreateTutoringOperator extends AbstractOperator<
     @inject(CreateTutoringUseCase)
     private createTutoring: CreateTutoringUseCase,
     @inject(FindByUserUseCase)
-    private findByUser: FindByUserUseCase
+    private findByUser: FindByUserUseCase,
+    @inject(CreateOrUpdateTutoringNotificatoinUseCase)
+    private createOrUpdateTutoringNotification: CreateOrUpdateTutoringNotificatoinUseCase
   ) {
     super()
   }
@@ -57,6 +60,19 @@ export class CreateTutoringOperator extends AbstractOperator<
 
     if (tutoring.isLeft()) {
       return left(tutoring.value)
+    }
+
+    const notification = await this.createOrUpdateTutoringNotification.exec({
+      date: tutoring.value.date,
+      subject: tutoring.value.subject,
+      student_real_id: tutoring.value.student_id,
+      tutor_real_id: tutoring.value.tutor_id,
+      tutoring_real_id: tutoring.value.id,
+      tutoring_real_uuid: tutoring.value.uuid,
+    })
+
+    if (notification.isLeft()) {
+      return left(notification.value)
     }
 
     return tutoring
