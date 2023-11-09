@@ -87,8 +87,7 @@ plugins:
   - serverless-offline
   - serverless-webpack
   
-functions:
-  - "${file(${self:custom.functionsDir}/@helpers/helpers.yml)}"
+functions:  
   - "${file(${self:custom.functionsDir}/user/user.yml)}"
   - "${file(${self:custom.functionsDir}/studyGroup/studyGroup.yml)}"
   - "${file(${self:custom.functionsDir}/post/post.yml)}"
