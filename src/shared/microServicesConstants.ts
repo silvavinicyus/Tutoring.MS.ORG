@@ -9,7 +9,7 @@ export const MS_ORG = {
   sns: {
     endpoint: process.env.IS_OFFLINE
       ? 'http://localhost:4099'
-      : `https://lambda.${usEast2}.amazonaws.com`,
+      : `https://sns.${usEast2}.amazonaws.com`,
     createUser: process.env.SNS_CREATE_USER,
     createOrUpdateTutoring: process.env.SNS_CREATE_TUTORING,
     createOrUpdateStudyGroup: process.env.SNS_CREATE_STUDY_GROUP,
@@ -25,6 +25,6 @@ export const MS_AUTH = {
   sns: {
     endpoint: process.env.IS_OFFLINE
       ? 'http://localhost:3999'
-      : `https://lambda.${usEast2}.amazonaws.com`,
+      : `https://sns.${usEast2}.amazonaws.com`,
   },
 }
