@@ -65,12 +65,12 @@ export class DeleteStudyGroupStudentOperator extends AbstractOperator<
     }
 
     const isAuthorizerCreator =
-      group.value.creator_id !== +authorizer.user_real_id
+      group.value.creator_id === +authorizer.user_real_id
     const isAuthorizerLeader = group.value.leaders.find(
       (leader) => leader.id === +authorizer.user_real_id
     )
 
-    if (!isAuthorizerCreator || !isAuthorizerLeader) {
+    if (!isAuthorizerCreator && !isAuthorizerLeader) {
       return left(RolesErrors.notAllowed())
     }
 
