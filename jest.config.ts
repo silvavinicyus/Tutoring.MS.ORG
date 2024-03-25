@@ -22,6 +22,10 @@ const config: Config.InitialOptions = {
     '<rootDir>/src/2-business/query/',
     '<rootDir>/src/util/',
     '[.]d.ts',
+    '<rootDir>/src/2-business/useCases/role',
+    '<rootDir>/src/2-business/useCases/transaction',
+    '<rootDir>/src/2-business/repositories/transaction',
+    '<rootDir>/src/2-business/services/date',
   ],
   coverageThreshold: {
     global: {
