@@ -30,7 +30,7 @@ import { DeleteStudyGroupStudentUseCase } from '@business/useCases/studyGroupStu
 import { CreateStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/createStudyGroupRequest'
 import { DeleteStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/deleteStudyGroupRequest'
 import { FindByStudyGroupRequestUseCase } from '@business/useCases/studyGroupRequest/findbyStudyGroupRequest'
-import { CreateUserNotification } from '@business/useCases/notification/createUserNotification'
+import { CreateOrUpdateUserNotification } from '@business/useCases/notification/createOrUpdateUserNotification'
 import { CreateTutoringUseCase } from '@business/useCases/tutoring/createTutoring'
 import { FindAllTutoringsUseCase } from '@business/useCases/tutoring/findAllTutoring'
 import { FindByTutoringUseCase } from '@business/useCases/tutoring/findByTutoring'
@@ -83,7 +83,7 @@ export const useCaseModule = new ContainerModule((bind: interfaces.Bind) => {
   bind(DeleteStudyGroupRequestUseCase).toSelf()
   bind(FindByStudyGroupRequestUseCase).toSelf()
 
-  bind(CreateUserNotification).toSelf()
+  bind(CreateOrUpdateUserNotification).toSelf()
 
   bind(CreateTutoringUseCase).toSelf()
   bind(FindAllTutoringsUseCase).toSelf()

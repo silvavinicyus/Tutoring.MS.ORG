@@ -5,7 +5,7 @@ import { InputCreateUser } from '@controller/serializers/user/create'
 import { left } from '@shared/either'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { UserErrors } from '@business/module/errors/userErrors'
-import { CreateUserNotification } from '@business/useCases/notification/createUserNotification'
+import { CreateOrUpdateUserNotification } from '@business/useCases/notification/createOrUpdateUserNotification'
 import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
 import { AbstractOperator } from '../abstractOperator'
 
@@ -20,8 +20,8 @@ export class CreateUserOperator extends AbstractOperator<
     private createUser: CreateUserUseCase,
     @inject(FindByUserUseCase)
     private findByUser: FindByUserUseCase,
-    @inject(CreateUserNotification)
-    private createUserNotification: CreateUserNotification
+    @inject(CreateOrUpdateUserNotification)
+    private createOrUpdateUser: CreateOrUpdateUserNotification
   ) {
     super()
   }
@@ -62,9 +62,11 @@ export class CreateUserOperator extends AbstractOperator<
       return left(userResult.value)
     }
 
-    const userNotification = await this.createUserNotification.exec({
-      ...userResult.value,
-      password: input.password,
+    const userNotification = await this.createOrUpdateUser.exec({
+      user: {
+        ...userResult.value,
+        password: input.password,
+      },
     })
 
     if (userNotification.isLeft()) {

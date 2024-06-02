@@ -16,7 +16,7 @@ import { NotificationErrors } from '@business/module/errors/notificationErrors'
 import { IAbstractUseCase } from '../abstractUseCase'
 
 @injectable()
-export class CreateOrUpdateTutoringNotificatoinUseCase
+export class CreateOrUpdateTutoringNotificationUseCase
   implements
     IAbstractUseCase<
       IInputCreateOrUpdateTutoringNotificationDto,

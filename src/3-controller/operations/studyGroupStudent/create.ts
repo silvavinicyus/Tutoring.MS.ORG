@@ -68,12 +68,12 @@ export class CreateStudyGroupStudentOperator extends AbstractOperator<
     }
 
     const isAuthorizerCreator =
-      studyGroup.value.creator_id !== +authorizer.user_real_id
+      studyGroup.value.creator_id === +authorizer.user_real_id
     const isAuthorizerLeader = studyGroup.value.leaders.find(
       (leader) => leader.id === +authorizer.user_real_id
     )
 
-    if (!isAuthorizerCreator || !isAuthorizerLeader) {
+    if (!isAuthorizerCreator && !isAuthorizerLeader) {
       return left(RolesErrors.notAllowed())
     }
 

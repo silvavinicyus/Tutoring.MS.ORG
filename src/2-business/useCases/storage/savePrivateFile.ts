@@ -7,7 +7,10 @@ import {
   ILoggerService,
   ILoggerServiceToken,
 } from '@business/services/logger/iLogger'
-import { IS3StorageService } from '@business/services/s3Storage/iS3Storage'
+import {
+  IS3StorageService,
+  IS3StorageServiceToken,
+} from '@business/services/s3Storage/iS3Storage'
 import { left, right } from '@shared/either'
 import { StorageErrors } from '@business/module/errors/storageErrors'
 import { IAbstractUseCase } from '../abstractUseCase'
@@ -20,7 +23,7 @@ export class SavePrivateFileUseCase
   constructor(
     @inject(ILoggerServiceToken)
     private loggerService: ILoggerService,
-    @inject(ILoggerServiceToken)
+    @inject(IS3StorageServiceToken)
     private storageService: IS3StorageService
   ) {}
 
