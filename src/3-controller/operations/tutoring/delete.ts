@@ -4,6 +4,8 @@ import { IOutputDeleteTutoringDto } from '@business/dto/tutoring/delete'
 import { DeleteTutoringUseCase } from '@business/useCases/tutoring/deleteTutoring'
 import { FindByTutoringUseCase } from '@business/useCases/tutoring/findByTutoring'
 import { left } from '@shared/either'
+import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
+import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,7 +17,11 @@ export class DeleteTutoringOperator extends AbstractOperator<
     @inject(DeleteTutoringUseCase)
     private deleteTutoring: DeleteTutoringUseCase,
     @inject(FindByTutoringUseCase)
-    private findByTutoring: FindByTutoringUseCase
+    private findByTutoring: FindByTutoringUseCase,
+    @inject(CreateTransactionUseCase)
+    private createTransaction: CreateTransactionUseCase,
+    @inject(CreateOrUpdateTutoringNotificationUseCase)
+    private createOrUpdateTutoring: CreateOrUpdateTutoringNotificationUseCase
   ) {
     super()
   }
@@ -36,14 +42,33 @@ export class DeleteTutoringOperator extends AbstractOperator<
       return left(tutoring.value)
     }
 
-    const tutoringResult = await this.deleteTutoring.exec({
-      id: tutoring.value.id,
-    })
+    const transaction = await this.createTransaction.exec()
+    if (transaction.isLeft()) {
+      return left(transaction.value)
+    }
+
+    const tutoringResult = await this.deleteTutoring.exec(
+      {
+        id: tutoring.value.id,
+      },
+      transaction.value.trx
+    )
 
     if (tutoringResult.isLeft()) {
+      await transaction.value.rollback()
       return left(tutoringResult.value)
     }
 
+    const deleteTutoringNotification = await this.createOrUpdateTutoring.exec({
+      deleted: true,
+    })
+
+    if (deleteTutoringNotification.isLeft()) {
+      await transaction.value.rollback()
+      return left(deleteTutoringNotification.value)
+    }
+
+    await transaction.value.commit()
     return tutoringResult
   }
 }

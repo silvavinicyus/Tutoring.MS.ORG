@@ -6,7 +6,7 @@ import { IUserRepositoryToken } from '@business/repositories/user/iUserRepositor
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { IUniqueIdentifierServiceToken } from '@business/services/uniqueIdentifier/iUniqueIdentifier'
-import { CreateUserNotification } from '@business/useCases/notification/createUserNotification'
+import { CreateOrUpdateUserNotification } from '@business/useCases/notification/createOrUpdateUserNotification'
 import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
 import { CreateUserUseCase } from '@business/useCases/user/createUser'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
@@ -39,7 +39,7 @@ describe('Create User Operator', () => {
     container.bind(CreateTransactionUseCase).toSelf().inSingletonScope()
     container.bind(CreateUserUseCase).toSelf().inSingletonScope()
     container.bind(FindByUserUseCase).toSelf().inSingletonScope()
-    container.bind(CreateUserNotification).toSelf().inSingletonScope()
+    container.bind(CreateOrUpdateUserNotification).toSelf().inSingletonScope()
     container.bind(ILoggerServiceToken).to(FakeLoggerService).inSingletonScope()
     container
       .bind(IUniqueIdentifierServiceToken)
@@ -153,11 +153,11 @@ describe('Create User Operator', () => {
       .spyOn(createUser, 'exec')
       .mockImplementationOnce(async () => right(fakeUserEntity))
 
-    const createUserNotification = container.get(CreateUserNotification)
+    const createUserNotification = container.get(CreateOrUpdateUserNotification)
     jest
       .spyOn(createUserNotification, 'exec')
       .mockImplementationOnce(async () =>
-        left(NotificationErrors.createUserFailed())
+        left(NotificationErrors.createOrUpdateUserFailed())
       )
 
     const sut = container.get(CreateUserOperator)
@@ -165,7 +165,7 @@ describe('Create User Operator', () => {
 
     expect(result.isLeft()).toBeTruthy()
     expect(result.isRight()).toBeFalsy()
-    expect(result.value).toEqual(NotificationErrors.createUserFailed())
+    expect(result.value).toEqual(NotificationErrors.createOrUpdateUserFailed())
   })
 
   test('Should have success to create a user', async () => {
@@ -184,7 +184,7 @@ describe('Create User Operator', () => {
       .spyOn(createUser, 'exec')
       .mockImplementationOnce(async () => right(fakeUserEntity))
 
-    const createUserNotification = container.get(CreateUserNotification)
+    const createUserNotification = container.get(CreateOrUpdateUserNotification)
     jest
       .spyOn(createUserNotification, 'exec')
       .mockImplementationOnce(async () => right(void 0))

@@ -4,6 +4,8 @@ import { FindByTutoringUseCase } from '@business/useCases/tutoring/findByTutorin
 import { UpdateTutoringUseCase } from '@business/useCases/tutoring/updateTutoring'
 import { InputUpdateTutoring } from '@controller/serializers/tutoring/update'
 import { left } from '@shared/either'
+import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
+import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -15,7 +17,11 @@ export class UpdateTutoringOperator extends AbstractOperator<
     @inject(FindByTutoringUseCase)
     private findByTutoring: FindByTutoringUseCase,
     @inject(UpdateTutoringUseCase)
-    private updateTutoring: UpdateTutoringUseCase
+    private updateTutoring: UpdateTutoringUseCase,
+    @inject(CreateTransactionUseCase)
+    private createTransaction: CreateTransactionUseCase,
+    @inject(CreateOrUpdateTutoringNotificationUseCase)
+    private createOrUpdateTutoring: CreateOrUpdateTutoringNotificationUseCase
   ) {
     super()
   }
@@ -36,6 +42,11 @@ export class UpdateTutoringOperator extends AbstractOperator<
       return left(tutoring.value)
     }
 
+    const transcation = await this.createTransaction.exec()
+    if (transcation.isLeft()) {
+      return left(transcation.value)
+    }
+
     const tutoringResult = await this.updateTutoring.exec(
       {
         date: input.date,
@@ -43,13 +54,32 @@ export class UpdateTutoringOperator extends AbstractOperator<
       {
         column: 'uuid',
         value: input.uuid,
-      }
+      },
+      transcation.value.trx
     )
 
     if (tutoringResult.isLeft()) {
+      await transcation.value.rollback()
       return left(tutoringResult.value)
     }
 
+    const updateTutoringNotification = await this.createOrUpdateTutoring.exec({
+      tutoring: {
+        ...input,
+        tutoring_real_uuid: input.uuid,
+        tutoring_real_id: tutoringResult.value.id,
+        student_real_id: tutoring.value.student_id,
+        tutor_real_id: tutoring.value.tutor_id,
+        subject: tutoring.value.subject,
+      },
+    })
+
+    if (updateTutoringNotification.isLeft()) {
+      await transcation.value.rollback()
+      return left(updateTutoringNotification.value)
+    }
+
+    await transcation.value.commit()
     return tutoringResult
   }
 }

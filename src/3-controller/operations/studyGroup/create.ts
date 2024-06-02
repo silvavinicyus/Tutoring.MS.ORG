@@ -7,6 +7,7 @@ import { CreateStudyGroupStudentUseCase } from '@business/useCases/studyGroupStu
 import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
 import { InputCreateStudyGroup } from '@controller/serializers/studyGroup/create'
 import { left } from '@shared/either'
+import { CreateOrUpdateStudyGroupNotificationUseCase } from '@business/useCases/notification/createOrUpdateStudyGroupNotification'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -22,7 +23,9 @@ export class CreateStudyGroupOperator extends AbstractOperator<
     @inject(CreateTransactionUseCase)
     private createTransaction: CreateTransactionUseCase,
     @inject(CreateStudyGroupStudentUseCase)
-    private createGroupStudent: CreateStudyGroupStudentUseCase
+    private createGroupStudent: CreateStudyGroupStudentUseCase,
+    @inject(CreateOrUpdateStudyGroupNotificationUseCase)
+    private createOrUpdateStudyGroup: CreateOrUpdateStudyGroupNotificationUseCase
   ) {
     super()
   }
@@ -67,6 +70,22 @@ export class CreateStudyGroupOperator extends AbstractOperator<
     if (studentGroup.isLeft()) {
       await transaction.value.rollback()
       return left(studentGroup.value)
+    }
+
+    const createStudyGroupNotification =
+      await this.createOrUpdateStudyGroup.exec({
+        studyGroup: {
+          creator_real_id: studyGroupResult.value.creator_id,
+          study_group_real_id: studyGroupResult.value.id,
+          study_group_real_uuid: studyGroupResult.value.uuid,
+          name: studyGroupResult.value.name,
+          subject: studyGroupResult.value.subject,
+        },
+      })
+
+    if (createStudyGroupNotification.isLeft()) {
+      await transaction.value.rollback()
+      return left(createStudyGroupNotification.value)
     }
 
     await transaction.value.commit()

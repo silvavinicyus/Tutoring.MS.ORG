@@ -8,6 +8,7 @@ import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { IAuthorizerInformation } from '@business/dto/role/authorize'
 import { DeleteManyStudyGroupStudentsUseCase } from '@business/useCases/studyGroupStudent/deleteManyStudyGroupStudents'
 import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
+import { CreateOrUpdateStudyGroupNotificationUseCase } from '@business/useCases/notification/createOrUpdateStudyGroupNotification'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -25,7 +26,9 @@ export class DeleteStudyGroupOperator extends AbstractOperator<
     @inject(DeleteManyStudyGroupStudentsUseCase)
     private deleteManyGroupStudents: DeleteManyStudyGroupStudentsUseCase,
     @inject(CreateTransactionUseCase)
-    private createTransaction: CreateTransactionUseCase
+    private createTransaction: CreateTransactionUseCase,
+    @inject(CreateOrUpdateStudyGroupNotificationUseCase)
+    private createOrUpdateStudyGroup: CreateOrUpdateStudyGroupNotificationUseCase
   ) {
     super()
   }
@@ -84,6 +87,16 @@ export class DeleteStudyGroupOperator extends AbstractOperator<
     if (studyGroupResult.isLeft()) {
       await transaction.value.rollback()
       return left(studyGroupResult.value)
+    }
+
+    const deleteStudyGroupNotification =
+      await this.createOrUpdateStudyGroup.exec({
+        deleted: true,
+      })
+
+    if (deleteStudyGroupNotification.isLeft()) {
+      await transaction.value.rollback()
+      return left(deleteStudyGroupNotification.value)
     }
 
     await transaction.value.commit()

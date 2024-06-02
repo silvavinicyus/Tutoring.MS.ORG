@@ -1,6 +1,6 @@
 import { SNS } from 'aws-sdk'
 import { injectable } from 'inversify'
-import { IInputCreateUserNotificationDto } from '@business/dto/notification/createUser'
+import { IInputCreateOrUpdateUserNotificationDto } from '@business/dto/notification/createOrUpdateUser'
 import { INotificationService } from '@business/services/notification/iNotificationService'
 import { MS_ORG } from '@shared/microServicesConstants'
 import { IInputCreateOrUpdateTutoringNotificationDto } from '@business/dto/notification/createOrUpdateTutoring'
@@ -13,7 +13,9 @@ export class SnsNotificationService implements INotificationService {
     endpoint: MS_ORG.sns.endpoint,
   })
 
-  async createUser(input: IInputCreateUserNotificationDto): Promise<void> {
+  async createOrUpdateUser(
+    input: IInputCreateOrUpdateUserNotificationDto
+  ): Promise<void> {
     await this.orgSNS
       .publish({
         TopicArn: MS_ORG.sns.createUser,

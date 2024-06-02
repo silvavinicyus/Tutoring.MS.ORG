@@ -6,6 +6,7 @@ import { IStudyGroupRepositoryToken } from '@business/repositories/studyGroup/iS
 import { IStudyGroupStudentRepositoryToken } from '@business/repositories/studyGroupStudent/iStudyGroupStudentRepository'
 import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
+import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { IUniqueIdentifierServiceToken } from '@business/services/uniqueIdentifier/iUniqueIdentifier'
 import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { CreateStudyGroupUseCase } from '@business/useCases/studyGroup/createStudyGroup'
@@ -23,6 +24,7 @@ import { FakeStudyGroupRepository } from '@tests/mock/repositories/fakeStudyGrou
 import { FakeStudyGroupStudentRepository } from '@tests/mock/repositories/fakeStudyGroupStudentRepository'
 import { FakeTransactionRepository } from '@tests/mock/repositories/fakeTransactionRepository'
 import { FakeLoggerService } from '@tests/mock/services/fakeLoggerService'
+import { FakeNotificationService } from '@tests/mock/services/fakeNotificationService'
 import { FakeUniqueIdentifierService } from '@tests/mock/services/fakeUniqueIdentifierService'
 
 describe('Create Study Group Operator', () => {
@@ -48,6 +50,7 @@ describe('Create Study Group Operator', () => {
       .bind(IUniqueIdentifierServiceToken)
       .to(FakeUniqueIdentifierService)
       .inSingletonScope()
+    container.bind(INotificationServiceToken).to(FakeNotificationService)
   })
 
   afterAll(() => {

@@ -1,6 +1,8 @@
 import { UserErrors } from '@business/module/errors/userErrors'
+import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { IUserRepositoryToken } from '@business/repositories/user/iUserRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
+import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { DeleteUserUseCase } from '@business/useCases/user/deleteUser'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { DeleteUserOperator } from '@controller/operations/user/delete'
@@ -8,8 +10,10 @@ import { InputDeleteUser } from '@controller/serializers/user/delete'
 import { left, right } from '@shared/either'
 import { container } from '@shared/ioc/container'
 import { fakeUserEntity } from '@tests/mock/entities/fakeUserEntity'
+import { FakeTransactionRepository } from '@tests/mock/repositories/fakeTransactionRepository'
 import { FakeUserRepository } from '@tests/mock/repositories/fakeUserRepository'
 import { FakeLoggerService } from '@tests/mock/services/fakeLoggerService'
+import { FakeNotificationService } from '@tests/mock/services/fakeNotificationService'
 
 describe('Delete User Operator', () => {
   beforeAll(() => {
@@ -20,6 +24,8 @@ describe('Delete User Operator', () => {
     container.bind(ILoggerServiceToken).to(FakeLoggerService).inSingletonScope()
     container.bind(DeleteUserUseCase).toSelf().inSingletonScope()
     container.bind(FindByUserUseCase).toSelf().inSingletonScope()
+    container.bind(INotificationServiceToken).to(FakeNotificationService)
+    container.bind(ITransactionRepositoryToken).to(FakeTransactionRepository)
   })
 
   afterAll(() => {

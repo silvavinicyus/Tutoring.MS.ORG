@@ -1,12 +1,12 @@
 import { IInputCreateOrUpdateStudyGroupNotificationDto } from '@business/dto/notification/createOrUpdateStudyGroup'
 import { IInputCreateOrUpdateTutoringNotificationDto } from '@business/dto/notification/createOrUpdateTutoring'
-import { IInputCreateUserNotificationDto } from '@business/dto/notification/createUser'
+import { IInputCreateOrUpdateUserNotificationDto } from '@business/dto/notification/createOrUpdateUser'
 import { NotificationErrors } from '@business/module/errors/notificationErrors'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { CreateOrUpdateStudyGroupNotificationUseCase } from '@business/useCases/notification/createOrUpdateStudyGroupNotification'
-import { CreateOrUpdateTutoringNotificatoinUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
-import { CreateUserNotification } from '@business/useCases/notification/createUserNotification'
+import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
+import { CreateOrUpdateUserNotification } from '@business/useCases/notification/createOrUpdateUserNotification'
 import { container } from '@shared/ioc/container'
 import { FakeLoggerService } from '@tests/mock/services/fakeLoggerService'
 import {
@@ -28,11 +28,13 @@ describe('Notifications Use Case', () => {
 
   describe('create or update study group notification use case', () => {
     const input: IInputCreateOrUpdateStudyGroupNotificationDto = {
-      creator_real_id: 1,
-      name: 'name',
-      study_group_real_id: 1,
-      study_group_real_uuid: 'real_uuid',
-      subject: 'subject',
+      studyGroup: {
+        creator_real_id: 1,
+        name: 'name',
+        study_group_real_id: 1,
+        study_group_real_uuid: 'real_uuid',
+        subject: 'subject',
+      },
     }
 
     test('Should fail to create or update a study group if notification service failed', async () => {
@@ -67,12 +69,14 @@ describe('Notifications Use Case', () => {
 
   describe('Create or update tutoring notification use case', () => {
     const input: IInputCreateOrUpdateTutoringNotificationDto = {
-      date: new Date(),
-      student_real_id: 1,
-      subject: 'subject',
-      tutor_real_id: 1,
-      tutoring_real_id: 1,
-      tutoring_real_uuid: 'real_uuid',
+      tutoring: {
+        date: new Date(),
+        student_real_id: 1,
+        subject: 'subject',
+        tutor_real_id: 1,
+        tutoring_real_id: 1,
+        tutoring_real_uuid: 'real_uuid',
+      },
     }
 
     test('Should fail to send a create or update tutoring notification if service failed', async () => {
@@ -82,7 +86,7 @@ describe('Notifications Use Case', () => {
         }
       )
 
-      const sut = container.get(CreateOrUpdateTutoringNotificatoinUseCase)
+      const sut = container.get(CreateOrUpdateTutoringNotificationUseCase)
       const result = await sut.exec(input)
 
       expect(result.isLeft()).toBeTruthy()
@@ -97,7 +101,7 @@ describe('Notifications Use Case', () => {
         async () => void 0
       )
 
-      const sut = container.get(CreateOrUpdateTutoringNotificatoinUseCase)
+      const sut = container.get(CreateOrUpdateTutoringNotificationUseCase)
       const result = await sut.exec(input)
 
       expect(result.isLeft()).toBeFalsy()
@@ -106,14 +110,16 @@ describe('Notifications Use Case', () => {
   })
 
   describe('Create user notification use case', () => {
-    const input: IInputCreateUserNotificationDto = {
-      birthdate: new Date(),
-      email: 'email',
-      name: 'new name',
-      id: 1,
-      password: 'password',
-      phone: '82 981',
-      uuid: 'real_uuid',
+    const input: IInputCreateOrUpdateUserNotificationDto = {
+      user: {
+        birthdate: new Date(),
+        email: 'email',
+        name: 'new name',
+        id: 1,
+        password: 'password',
+        phone: '82 981',
+        uuid: 'real_uuid',
+      },
     }
 
     test('Should fail to send a create user notification if service failed', async () => {
@@ -121,12 +127,14 @@ describe('Notifications Use Case', () => {
         throw new Error()
       })
 
-      const sut = container.get(CreateUserNotification)
+      const sut = container.get(CreateOrUpdateUserNotification)
       const result = await sut.exec(input)
 
       expect(result.isLeft()).toBeTruthy()
       expect(result.isRight()).toBeFalsy()
-      expect(result.value).toEqual(NotificationErrors.createUserFailed())
+      expect(result.value).toEqual(
+        NotificationErrors.createOrUpdateUserFailed()
+      )
     })
 
     test('Should have success to send a create user notification', async () => {
@@ -134,7 +142,7 @@ describe('Notifications Use Case', () => {
         async () => void 0
       )
 
-      const sut = container.get(CreateUserNotification)
+      const sut = container.get(CreateOrUpdateUserNotification)
       const result = await sut.exec(input)
 
       expect(result.isLeft()).toBeFalsy()

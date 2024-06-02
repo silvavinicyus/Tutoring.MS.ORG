@@ -4,7 +4,8 @@ import { IOutputCreateTutoringDto } from '@business/dto/tutoring/create'
 import { CreateTutoringUseCase } from '@business/useCases/tutoring/createTutoring'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { left } from '@shared/either'
-import { CreateOrUpdateTutoringNotificatoinUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
+import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
+import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
 import { AbstractOperator } from '../abstractOperator'
 
 @injectable()
@@ -17,8 +18,10 @@ export class CreateTutoringOperator extends AbstractOperator<
     private createTutoring: CreateTutoringUseCase,
     @inject(FindByUserUseCase)
     private findByUser: FindByUserUseCase,
-    @inject(CreateOrUpdateTutoringNotificatoinUseCase)
-    private createOrUpdateTutoringNotification: CreateOrUpdateTutoringNotificatoinUseCase
+    @inject(CreateOrUpdateTutoringNotificationUseCase)
+    private createOrUpdateTutoringNotification: CreateOrUpdateTutoringNotificationUseCase,
+    @inject(CreateTransactionUseCase)
+    private createTransaction: CreateTransactionUseCase
   ) {
     super()
   }
@@ -52,29 +55,42 @@ export class CreateTutoringOperator extends AbstractOperator<
       return left(student.value)
     }
 
-    const tutoring = await this.createTutoring.exec({
-      ...input,
-      student_id: student.value.id,
-      tutor_id: tutor.value.id,
-    })
+    const transaction = await this.createTransaction.exec()
+    if (transaction.isLeft()) {
+      return left(transaction.value)
+    }
+
+    const tutoring = await this.createTutoring.exec(
+      {
+        ...input,
+        student_id: student.value.id,
+        tutor_id: tutor.value.id,
+      },
+      transaction.value.trx
+    )
 
     if (tutoring.isLeft()) {
+      await transaction.value.rollback()
       return left(tutoring.value)
     }
 
     const notification = await this.createOrUpdateTutoringNotification.exec({
-      date: tutoring.value.date,
-      subject: tutoring.value.subject,
-      student_real_id: tutoring.value.student_id,
-      tutor_real_id: tutoring.value.tutor_id,
-      tutoring_real_id: tutoring.value.id,
-      tutoring_real_uuid: tutoring.value.uuid,
+      tutoring: {
+        date: tutoring.value.date,
+        subject: tutoring.value.subject,
+        student_real_id: tutoring.value.student_id,
+        tutor_real_id: tutoring.value.tutor_id,
+        tutoring_real_id: tutoring.value.id,
+        tutoring_real_uuid: tutoring.value.uuid,
+      },
     })
 
     if (notification.isLeft()) {
+      await transaction.value.rollback()
       return left(notification.value)
     }
 
+    await transaction.value.commit()
     return tutoring
   }
 }

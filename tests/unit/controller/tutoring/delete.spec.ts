@@ -1,6 +1,8 @@
 import { TutoringErrors } from '@business/module/errors/tutoringErrors'
+import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { ITutoringRepositoryToken } from '@business/repositories/tutoring/iTutoringRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
+import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { DeleteTutoringUseCase } from '@business/useCases/tutoring/deleteTutoring'
 import { FindByTutoringUseCase } from '@business/useCases/tutoring/findByTutoring'
 import { DeleteTutoringOperator } from '@controller/operations/tutoring/delete'
@@ -8,8 +10,10 @@ import { InputDeleteTutoring } from '@controller/serializers/tutoring/delete'
 import { left, right } from '@shared/either'
 import { container } from '@shared/ioc/container'
 import { fakeTutoringEntity } from '@tests/mock/entities/fakeTutoringEntity'
+import { FakeTransactionRepository } from '@tests/mock/repositories/fakeTransactionRepository'
 import { FakeTutoringRepository } from '@tests/mock/repositories/fakeTutoringRepository'
 import { FakeLoggerService } from '@tests/mock/services/fakeLoggerService'
+import { FakeNotificationService } from '@tests/mock/services/fakeNotificationService'
 
 describe('Delete Tutoring Operator', () => {
   beforeAll(() => {
@@ -20,6 +24,8 @@ describe('Delete Tutoring Operator', () => {
       .bind(ITutoringRepositoryToken)
       .to(FakeTutoringRepository)
       .inSingletonScope()
+    container.bind(INotificationServiceToken).to(FakeNotificationService)
+    container.bind(ITransactionRepositoryToken).to(FakeTransactionRepository)
   })
 
   afterAll(() => {

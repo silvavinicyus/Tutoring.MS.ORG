@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify'
 import {
-  IInputCreateUserNotificationDto,
-  IOutputCreateUserNotificationDto,
-} from '@business/dto/notification/createUser'
+  IInputCreateOrUpdateUserNotificationDto,
+  IOutputCreateOrUpdateUserNotificationDto,
+} from '@business/dto/notification/createOrUpdateUser'
 import {
   INotificationService,
   INotificationServiceToken,
@@ -16,11 +16,11 @@ import { NotificationErrors } from '@business/module/errors/notificationErrors'
 import { IAbstractUseCase } from '../abstractUseCase'
 
 @injectable()
-export class CreateUserNotification
+export class CreateOrUpdateUserNotification
   implements
     IAbstractUseCase<
-      IInputCreateUserNotificationDto,
-      IOutputCreateUserNotificationDto
+      IInputCreateOrUpdateUserNotificationDto,
+      IOutputCreateOrUpdateUserNotificationDto
     >
 {
   constructor(
@@ -31,15 +31,17 @@ export class CreateUserNotification
   ) {}
 
   async exec(
-    props: IInputCreateUserNotificationDto
-  ): Promise<IOutputCreateUserNotificationDto> {
+    props: IInputCreateOrUpdateUserNotificationDto
+  ): Promise<IOutputCreateOrUpdateUserNotificationDto> {
     try {
-      const notification = await this.notificationService.createUser(props)
+      const notification = await this.notificationService.createOrUpdateUser(
+        props
+      )
 
       return right(notification)
     } catch (err) {
       this.loggerService.error(err)
-      return left(NotificationErrors.createUserFailed())
+      return left(NotificationErrors.createOrUpdateUserFailed())
     }
   }
 }

@@ -1,12 +1,13 @@
 import { NotificationErrors } from '@business/module/errors/notificationErrors'
 import { TutoringErrors } from '@business/module/errors/tutoringErrors'
 import { UserErrors } from '@business/module/errors/userErrors'
+import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { ITutoringRepositoryToken } from '@business/repositories/tutoring/iTutoringRepository'
 import { IUserRepositoryToken } from '@business/repositories/user/iUserRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { IUniqueIdentifierServiceToken } from '@business/services/uniqueIdentifier/iUniqueIdentifier'
-import { CreateOrUpdateTutoringNotificatoinUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
+import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
 import { CreateTutoringUseCase } from '@business/useCases/tutoring/createTutoring'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { CreateTutoringOperator } from '@controller/operations/tutoring/create'
@@ -15,6 +16,7 @@ import { left, right } from '@shared/either'
 import { container } from '@shared/ioc/container'
 import { fakeTutoringEntity } from '@tests/mock/entities/fakeTutoringEntity'
 import { fakeUserEntity } from '@tests/mock/entities/fakeUserEntity'
+import { FakeTransactionRepository } from '@tests/mock/repositories/fakeTransactionRepository'
 import { FakeTutoringRepository } from '@tests/mock/repositories/fakeTutoringRepository'
 import { FakeUserRepository } from '@tests/mock/repositories/fakeUserRepository'
 import { FakeLoggerService } from '@tests/mock/services/fakeLoggerService'
@@ -26,7 +28,7 @@ describe('Create Tutoring Operator', () => {
     container.bind(CreateTutoringUseCase).toSelf().inSingletonScope()
     container.bind(FindByUserUseCase).toSelf().inSingletonScope()
     container
-      .bind(CreateOrUpdateTutoringNotificatoinUseCase)
+      .bind(CreateOrUpdateTutoringNotificationUseCase)
       .toSelf()
       .inSingletonScope()
     container
@@ -46,6 +48,7 @@ describe('Create Tutoring Operator', () => {
       .bind(INotificationServiceToken)
       .to(FakeNotificationService)
       .inSingletonScope()
+    container.bind(ITransactionRepositoryToken).to(FakeTransactionRepository)
   })
 
   afterAll(() => {
@@ -121,7 +124,7 @@ describe('Create Tutoring Operator', () => {
       .mockImplementationOnce(async () => right(fakeTutoringEntity))
 
     const sendCreationNotification = container.get(
-      CreateOrUpdateTutoringNotificatoinUseCase
+      CreateOrUpdateTutoringNotificationUseCase
     )
     jest
       .spyOn(sendCreationNotification, 'exec')
@@ -152,7 +155,7 @@ describe('Create Tutoring Operator', () => {
       .mockImplementationOnce(async () => right(fakeTutoringEntity))
 
     const sendCreationNotification = container.get(
-      CreateOrUpdateTutoringNotificatoinUseCase
+      CreateOrUpdateTutoringNotificationUseCase
     )
     jest
       .spyOn(sendCreationNotification, 'exec')

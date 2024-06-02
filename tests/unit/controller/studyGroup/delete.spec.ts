@@ -6,6 +6,7 @@ import { IStudyGroupRepositoryToken } from '@business/repositories/studyGroup/iS
 import { IStudyGroupStudentRepositoryToken } from '@business/repositories/studyGroupStudent/iStudyGroupStudentRepository'
 import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
+import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { DeleteStudyGroupUseCase } from '@business/useCases/studyGroup/deleteStudyGroup'
 import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
@@ -22,6 +23,7 @@ import { FakeStudyGroupRepository } from '@tests/mock/repositories/fakeStudyGrou
 import { FakeStudyGroupStudentRepository } from '@tests/mock/repositories/fakeStudyGroupStudentRepository'
 import { FakeTransactionRepository } from '@tests/mock/repositories/fakeTransactionRepository'
 import { FakeLoggerService } from '@tests/mock/services/fakeLoggerService'
+import { FakeNotificationService } from '@tests/mock/services/fakeNotificationService'
 
 describe('Delete Study Group Operator', () => {
   beforeAll(() => {
@@ -46,6 +48,7 @@ describe('Delete Study Group Operator', () => {
       .to(FakeStudyGroupStudentRepository)
       .inSingletonScope()
     container.bind(ILoggerServiceToken).to(FakeLoggerService).inSingletonScope()
+    container.bind(INotificationServiceToken).to(FakeNotificationService)
   })
 
   afterAll(() => {
