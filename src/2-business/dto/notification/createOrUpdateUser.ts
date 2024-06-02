@@ -3,11 +3,11 @@ import { IError } from '@shared/IError'
 import { Either } from '@shared/either'
 
 export type IInputCreateOrUpdateUserNotificationDto = {
-  user?: Pick<
-    IUserEntity,
-    'name' | 'phone' | 'email' | 'id' | 'birthdate' | 'uuid'
+  user: Partial<
+    Pick<IUserEntity, 'name' | 'phone' | 'email' | 'birthdate' | 'uuid'>
   > & {
     password?: string
+    id: number
   }
   deleted?: boolean
 }

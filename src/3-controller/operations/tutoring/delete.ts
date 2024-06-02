@@ -60,6 +60,9 @@ export class DeleteTutoringOperator extends AbstractOperator<
     }
 
     const deleteTutoringNotification = await this.createOrUpdateTutoring.exec({
+      tutoring: {
+        tutoring_real_id: tutoring.value.id,
+      },
       deleted: true,
     })
 

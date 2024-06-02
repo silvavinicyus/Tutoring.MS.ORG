@@ -61,6 +61,9 @@ export class DeleteUserOperator extends AbstractOperator<
     }
 
     const deleteUserNotification = await this.createOrUpdateUser.exec({
+      user: {
+        id: user.value.id,
+      },
       deleted: true,
     })
 

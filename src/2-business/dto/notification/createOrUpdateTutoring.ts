@@ -3,11 +3,11 @@ import { IError } from '@shared/IError'
 import { Either } from '@shared/either'
 
 export type IInputCreateOrUpdateTutoringNotificationDto = {
-  tutoring?: Pick<ITutoringEntity, 'date' | 'subject'> & {
-    tutor_real_id: number
-    student_real_id: number
+  tutoring: Partial<Pick<ITutoringEntity, 'date' | 'subject'>> & {
+    tutor_real_id?: number
+    student_real_id?: number
     tutoring_real_id: number
-    tutoring_real_uuid: string
+    tutoring_real_uuid?: string
   }
   deleted?: boolean
 }

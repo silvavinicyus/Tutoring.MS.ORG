@@ -91,6 +91,9 @@ export class DeleteStudyGroupOperator extends AbstractOperator<
 
     const deleteStudyGroupNotification =
       await this.createOrUpdateStudyGroup.exec({
+        studyGroup: {
+          study_group_real_id: studyGroup.value.id,
+        },
         deleted: true,
       })
 
