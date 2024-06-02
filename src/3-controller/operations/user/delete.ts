@@ -72,7 +72,7 @@ export class DeleteUserOperator extends AbstractOperator<
       return left(deleteUserNotification.value)
     }
 
-    await transaction.value.commit
+    await transaction.value.commit()
     return userResult
   }
 }
