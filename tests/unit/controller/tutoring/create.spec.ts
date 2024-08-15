@@ -1,4 +1,5 @@
 import { NotificationErrors } from '@business/module/errors/notificationErrors'
+import { TransactionErrors } from '@business/module/errors/transactionErrors'
 import { TutoringErrors } from '@business/module/errors/tutoringErrors'
 import { UserErrors } from '@business/module/errors/userErrors'
 import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
@@ -8,6 +9,7 @@ import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { IUniqueIdentifierServiceToken } from '@business/services/uniqueIdentifier/iUniqueIdentifier'
 import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
+import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
 import { CreateTutoringUseCase } from '@business/useCases/tutoring/createTutoring'
 import { FindByUserUseCase } from '@business/useCases/user/findByUser'
 import { CreateTutoringOperator } from '@controller/operations/tutoring/create'
@@ -27,6 +29,7 @@ describe('Create Tutoring Operator', () => {
   beforeAll(() => {
     container.bind(CreateTutoringUseCase).toSelf().inSingletonScope()
     container.bind(FindByUserUseCase).toSelf().inSingletonScope()
+    container.bind(CreateTransactionUseCase).toSelf().inSingletonScope()
     container
       .bind(CreateOrUpdateTutoringNotificationUseCase)
       .toSelf()
@@ -89,6 +92,28 @@ describe('Create Tutoring Operator', () => {
     expect(result.isLeft()).toBeTruthy()
     expect(result.isRight()).toBeFalsy()
     expect(result.value).toEqual(UserErrors.notFound())
+  })
+
+  test('Should fail to create a tutoring if transaction failed to start', async () => {
+    const findUser = container.get(FindByUserUseCase)
+    jest
+      .spyOn(findUser, 'exec')
+      .mockImplementationOnce(async () => right(fakeUserEntity))
+      .mockImplementationOnce(async () => right(fakeUserEntity))
+
+    const createTransaction = container.get(CreateTransactionUseCase)
+    jest
+      .spyOn(createTransaction, 'exec')
+      .mockImplementationOnce(async () =>
+        left(TransactionErrors.creationError())
+      )
+
+    const sut = container.get(CreateTutoringOperator)
+    const result = await sut.run(input)
+
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.isRight()).toBeFalsy()
+    expect(result.value).toEqual(TransactionErrors.creationError())
   })
 
   test('Should fail to create a tutoring if tutoring creation failed', async () => {

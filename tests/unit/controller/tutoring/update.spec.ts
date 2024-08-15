@@ -1,8 +1,12 @@
+import { NotificationErrors } from '@business/module/errors/notificationErrors'
+import { TransactionErrors } from '@business/module/errors/transactionErrors'
 import { TutoringErrors } from '@business/module/errors/tutoringErrors'
 import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { ITutoringRepositoryToken } from '@business/repositories/tutoring/iTutoringRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
+import { CreateOrUpdateTutoringNotificationUseCase } from '@business/useCases/notification/createOrUpdateTutoringNotification'
+import { CreateTransactionUseCase } from '@business/useCases/transaction/CreateTransactionUseCase'
 import { FindByTutoringUseCase } from '@business/useCases/tutoring/findByTutoring'
 import { UpdateTutoringUseCase } from '@business/useCases/tutoring/updateTutoring'
 import { UpdateTutoringOperator } from '@controller/operations/tutoring/update'
@@ -17,6 +21,11 @@ import { FakeNotificationService } from '@tests/mock/services/fakeNotificationSe
 
 describe('Find by Tutoring Operator', () => {
   beforeAll(() => {
+    container
+      .bind(CreateOrUpdateTutoringNotificationUseCase)
+      .toSelf()
+      .inSingletonScope()
+    container.bind(CreateTransactionUseCase).toSelf().inSingletonScope()
     container.bind(UpdateTutoringUseCase).toSelf().inSingletonScope()
     container.bind(FindByTutoringUseCase).toSelf().inSingletonScope()
     container.bind(ILoggerServiceToken).to(FakeLoggerService).inSingletonScope()
@@ -68,6 +77,57 @@ describe('Find by Tutoring Operator', () => {
     expect(result.isLeft()).toBeTruthy()
     expect(result.isRight()).toBeFalsy()
     expect(result.value).toEqual(TutoringErrors.updateError())
+  })
+
+  test('Should fail to update a tutoring if update failed', async () => {
+    const findTutoring = container.get(FindByTutoringUseCase)
+    jest
+      .spyOn(findTutoring, 'exec')
+      .mockImplementationOnce(async () => right(fakeTutoringEntity))
+
+    const createTransaction = container.get(CreateTransactionUseCase)
+    jest
+      .spyOn(createTransaction, 'exec')
+      .mockImplementationOnce(async () =>
+        left(TransactionErrors.creationError())
+      )
+
+    const sut = container.get(UpdateTutoringOperator)
+    const result = await sut.run(input)
+
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.isRight()).toBeFalsy()
+    expect(result.value).toEqual(TransactionErrors.creationError())
+  })
+
+  test('Should fail to update a tutoring if notification failed', async () => {
+    const findTutoring = container.get(FindByTutoringUseCase)
+    jest
+      .spyOn(findTutoring, 'exec')
+      .mockImplementationOnce(async () => right(fakeTutoringEntity))
+
+    const updateTutoring = container.get(UpdateTutoringUseCase)
+    jest
+      .spyOn(updateTutoring, 'exec')
+      .mockImplementationOnce(async () => right(fakeTutoringEntity))
+
+    const updateTutoringNotification = container.get(
+      CreateOrUpdateTutoringNotificationUseCase
+    )
+    jest
+      .spyOn(updateTutoringNotification, 'exec')
+      .mockImplementationOnce(async () =>
+        left(NotificationErrors.createOrUpdateTutoringFailed())
+      )
+
+    const sut = container.get(UpdateTutoringOperator)
+    const result = await sut.run(input)
+
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.isRight()).toBeFalsy()
+    expect(result.value).toEqual(
+      NotificationErrors.createOrUpdateTutoringFailed()
+    )
   })
 
   test('Should have success to update a tutoring', async () => {

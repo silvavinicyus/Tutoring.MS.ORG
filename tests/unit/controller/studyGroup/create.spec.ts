@@ -1,3 +1,4 @@
+import { NotificationErrors } from '@business/module/errors/notificationErrors'
 import { RolesErrors } from '@business/module/errors/rolesErrors'
 import { StudyGroupErrors } from '@business/module/errors/studyGroupErrors'
 import { StudyGroupStudentErrors } from '@business/module/errors/studyGroupStudentErrors'
@@ -8,6 +9,7 @@ import { ITransactionRepositoryToken } from '@business/repositories/transaction/
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
 import { IUniqueIdentifierServiceToken } from '@business/services/uniqueIdentifier/iUniqueIdentifier'
+import { CreateOrUpdateStudyGroupNotificationUseCase } from '@business/useCases/notification/createOrUpdateStudyGroupNotification'
 import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { CreateStudyGroupUseCase } from '@business/useCases/studyGroup/createStudyGroup'
 import { CreateStudyGroupStudentUseCase } from '@business/useCases/studyGroupStudent/createStudyGroupStudent'
@@ -33,6 +35,10 @@ describe('Create Study Group Operator', () => {
     container.bind(VerifyProfileUseCase).toSelf().inSingletonScope()
     container.bind(CreateTransactionUseCase).toSelf().inSingletonScope()
     container.bind(CreateStudyGroupStudentUseCase).toSelf().inSingletonScope()
+    container
+      .bind(CreateOrUpdateStudyGroupNotificationUseCase)
+      .toSelf()
+      .inSingletonScope()
     container
       .bind(IStudyGroupRepositoryToken)
       .to(FakeStudyGroupRepository)
@@ -154,6 +160,48 @@ describe('Create Study Group Operator', () => {
     expect(result.isLeft()).toBeTruthy()
     expect(result.isRight()).toBeFalsy()
     expect(result.value).toEqual(StudyGroupStudentErrors.creationError())
+  })
+
+  test('Should fail to create a study group if create study group notification failed', async () => {
+    const verifyProfile = container.get(VerifyProfileUseCase)
+    jest
+      .spyOn(verifyProfile, 'exec')
+      .mockImplementationOnce(async () => right(fakeAuthorizer))
+
+    const transaction = container.get(CreateTransactionUseCase)
+    jest
+      .spyOn(transaction, 'exec')
+      .mockImplementationOnce(async () => right(fakeTransaction))
+
+    const createStudyGroup = container.get(CreateStudyGroupUseCase)
+    jest
+      .spyOn(createStudyGroup, 'exec')
+      .mockImplementationOnce(async () => right(fakeStudyGroupEntity))
+
+    const createStudyGroupStudent = container.get(
+      CreateStudyGroupStudentUseCase
+    )
+    jest
+      .spyOn(createStudyGroupStudent, 'exec')
+      .mockImplementationOnce(async () => right(fakeStudyGroupStudentEntity))
+
+    const createStudyGroupNotification = container.get(
+      CreateOrUpdateStudyGroupNotificationUseCase
+    )
+    jest
+      .spyOn(createStudyGroupNotification, 'exec')
+      .mockImplementationOnce(async () =>
+        left(NotificationErrors.createOrUpdateStudyGroupFailed())
+      )
+
+    const sut = container.get(CreateStudyGroupOperator)
+    const result = await sut.run(input, fakeAuthorizer)
+
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.isRight()).toBeFalsy()
+    expect(result.value).toEqual(
+      NotificationErrors.createOrUpdateStudyGroupFailed()
+    )
   })
 
   test('Should have success to create a study group', async () => {

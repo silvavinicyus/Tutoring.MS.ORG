@@ -1,3 +1,4 @@
+import { NotificationErrors } from '@business/module/errors/notificationErrors'
 import { RolesErrors } from '@business/module/errors/rolesErrors'
 import { StudyGroupErrors } from '@business/module/errors/studyGroupErrors'
 import { StudyGroupStudentErrors } from '@business/module/errors/studyGroupStudentErrors'
@@ -7,6 +8,7 @@ import { IStudyGroupStudentRepositoryToken } from '@business/repositories/studyG
 import { ITransactionRepositoryToken } from '@business/repositories/transaction/iTransactionRepository'
 import { ILoggerServiceToken } from '@business/services/logger/iLogger'
 import { INotificationServiceToken } from '@business/services/notification/iNotificationService'
+import { CreateOrUpdateStudyGroupNotificationUseCase } from '@business/useCases/notification/createOrUpdateStudyGroupNotification'
 import { VerifyProfileUseCase } from '@business/useCases/role/verifyProfile'
 import { DeleteStudyGroupUseCase } from '@business/useCases/studyGroup/deleteStudyGroup'
 import { FindStudyGroupByUseCase } from '@business/useCases/studyGroup/findByStudyGroup'
@@ -27,6 +29,10 @@ import { FakeNotificationService } from '@tests/mock/services/fakeNotificationSe
 
 describe('Delete Study Group Operator', () => {
   beforeAll(() => {
+    container
+      .bind(CreateOrUpdateStudyGroupNotificationUseCase)
+      .toSelf()
+      .inSingletonScope()
     container.bind(DeleteStudyGroupUseCase).toSelf().inSingletonScope()
     container.bind(FindStudyGroupByUseCase).toSelf().inSingletonScope()
     container.bind(VerifyProfileUseCase).toSelf().inSingletonScope()
@@ -181,6 +187,51 @@ describe('Delete Study Group Operator', () => {
     expect(result.isLeft()).toBeTruthy()
     expect(result.isRight()).toBeFalsy()
     expect(result.value).toEqual(StudyGroupErrors.deleteFailed())
+  })
+
+  test('Should fail to delete a study group if failed to delete the study group', async () => {
+    const verifyProfile = container.get(VerifyProfileUseCase)
+    jest
+      .spyOn(verifyProfile, 'exec')
+      .mockImplementationOnce(async () => right(fakeAuthorizer))
+
+    const findStudyGroup = container.get(FindStudyGroupByUseCase)
+    jest
+      .spyOn(findStudyGroup, 'exec')
+      .mockImplementationOnce(async () => right(fakeStudyGroupEntity))
+
+    const createTransaction = container.get(CreateTransactionUseCase)
+    jest
+      .spyOn(createTransaction, 'exec')
+      .mockImplementationOnce(async () => right(fakeTransaction))
+
+    const deleteStudents = container.get(DeleteManyStudyGroupStudentsUseCase)
+    jest
+      .spyOn(deleteStudents, 'exec')
+      .mockImplementationOnce(async () => right(void 0))
+
+    const deleteStudyGroup = container.get(DeleteStudyGroupUseCase)
+    jest
+      .spyOn(deleteStudyGroup, 'exec')
+      .mockImplementationOnce(async () => right(void 0))
+
+    const deleteStudyGroupNotififcation = container.get(
+      CreateOrUpdateStudyGroupNotificationUseCase
+    )
+    jest
+      .spyOn(deleteStudyGroupNotififcation, 'exec')
+      .mockImplementationOnce(async () =>
+        left(NotificationErrors.createOrUpdateStudyGroupFailed())
+      )
+
+    const sut = container.get(DeleteStudyGroupOperator)
+    const result = await sut.run(input, fakeAuthorizer)
+
+    expect(result.isLeft()).toBeTruthy()
+    expect(result.isRight()).toBeFalsy()
+    expect(result.value).toEqual(
+      NotificationErrors.createOrUpdateStudyGroupFailed()
+    )
   })
 
   test('Should have success to delete a study group', async () => {
